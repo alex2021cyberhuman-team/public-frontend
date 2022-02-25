@@ -130,7 +130,7 @@ it('Should redirect to login on favorite if the user is not logged in', async ()
     articlesCount: 0,
   });
   mockedGetTags.mockResolvedValueOnce({ tags: [] });
-  mockedFavoriteArticle.mockResolvedValueOnce({ ...defaultArticle, favorited: true });
+  mockedFavoriteArticle.mockResolvedValueOnce();
 
   await act(async () => {
     await render(
@@ -156,7 +156,7 @@ it('Should favorite article', async () => {
     articlesCount: 0,
   });
   mockedGetTags.mockResolvedValueOnce({ tags: [] });
-  mockedFavoriteArticle.mockResolvedValueOnce({ ...defaultArticle, favorited: true });
+  mockedFavoriteArticle.mockResolvedValueOnce();
 
   await act(async () => {
     store.dispatch(
@@ -190,7 +190,7 @@ it('Should unfavorite article', async () => {
     articlesCount: 0,
   });
   mockedGetTags.mockResolvedValueOnce({ tags: [] });
-  mockedUnfavoriteArticle.mockResolvedValueOnce({ ...defaultArticle, favorited: false });
+  mockedUnfavoriteArticle.mockResolvedValueOnce();
 
   await act(async () => {
     store.dispatch(
@@ -253,7 +253,7 @@ it('Should change tabs', async () => {
     articlesCount: 0,
   });
   mockedGetTags.mockResolvedValueOnce({ tags: ['the real tag'] });
-  mockedUnfavoriteArticle.mockResolvedValueOnce({ ...defaultArticle, favorited: false });
+  mockedUnfavoriteArticle.mockResolvedValueOnce();
 
   await act(async () => {
     store.dispatch(

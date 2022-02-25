@@ -388,7 +388,7 @@ function ArticleComment({
   );
 }
 
-async function onDeleteComment(slug: string, id: number) {
+async function onDeleteComment(slug: string, id: string) {
   await deleteComment(slug, id);
   store.dispatch(loadComments(await getArticleComments(slug)));
 }

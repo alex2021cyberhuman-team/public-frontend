@@ -34,9 +34,17 @@ const slice = createSlice({
     },
     endSubmittingFavorite: (
       state,
-      { payload: { article, index } }: PayloadAction<{ index: number; article: Article }>
+      { payload: { favorited, index } }: PayloadAction<{ index: number; favorited: boolean }>
     ) => {
-      state.articles = state.articles.map(R.update<ArticleViewerArticle>(index, { article, isSubmitting: false }));
+      state.articles = state.articles.map(
+        R.adjust(index, (a) => {
+          const b = Object.assign({}, a);
+          b.isSubmitting = false;
+          b.article.favorited = favorited;
+          b.article.favoritesCount += favorited ? +1 : -1;
+          return b;
+        })
+      );
     },
     changePage: (state, { payload: page }: PayloadAction<number>) => {
       state.currentPage = page;

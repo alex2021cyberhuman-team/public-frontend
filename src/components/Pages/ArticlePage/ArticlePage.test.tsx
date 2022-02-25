@@ -48,7 +48,7 @@ const defaultArticle = {
 };
 
 const defaultComment: Comment = {
-  id: 1,
+  id: '1',
   createdAt: new Date(),
   updatedAt: new Date(),
   body: 'It takes a Jacobian',
@@ -115,8 +115,8 @@ describe('For guest', () => {
   it('Should show comments', async () => {
     mockedGetArticle.mockResolvedValueOnce(defaultArticle);
     mockedGetArticleComments.mockResolvedValueOnce([
-      { ...defaultComment, id: 1, body: 'First Comment', author: { ...defaultComment.author, username: 'James' } },
-      { ...defaultComment, id: 2, body: 'Second Comment', author: { ...defaultComment.author, username: 'jakelson' } },
+      { ...defaultComment, id: '2', body: 'First Comment', author: { ...defaultComment.author, username: 'James' } },
+      { ...defaultComment, id: '3', body: 'Second Comment', author: { ...defaultComment.author, username: 'jakelson' } },
     ]);
     await renderWithPath('sample-slug');
 
@@ -287,7 +287,7 @@ describe('For non article owner User', () => {
     mockedGetArticleComments.mockResolvedValueOnce([
       {
         ...defaultComment,
-        id: 3,
+        id: '3',
         body: 'This is a test comment',
         author: { ...defaultComment.author, username: 'jake0' },
       },
@@ -302,7 +302,7 @@ describe('For non article owner User', () => {
     mockedGetArticleComments.mockResolvedValueOnce([
       {
         ...defaultComment,
-        id: 3,
+        id: '3',
         body: 'This is a test comment',
         author: { ...defaultComment.author, username: 'jake2', image: '' },
       },
@@ -318,7 +318,7 @@ describe('For non article owner User', () => {
     expect(screen.getByText('This is a test comment after')).toBeInTheDocument();
     expect(mockedDeleteComment.mock.calls).toHaveLength(1);
     expect(mockedDeleteComment.mock.calls[0][0]).toMatch(defaultArticle.slug);
-    expect(mockedDeleteComment.mock.calls[0][1]).toBe(3);
+    expect(mockedDeleteComment.mock.calls[0][1]).toBe('3');
   });
 });
 

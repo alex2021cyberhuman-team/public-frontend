@@ -106,7 +106,7 @@ function onFavoriteToggle(index: number, { slug, favorited }: Article) {
     }
     store.dispatch(startSubmittingFavorite(index));
 
-    const article = await (favorited ? unfavoriteArticle(slug) : favoriteArticle(slug));
-    store.dispatch(endSubmittingFavorite({ index, article }));
+    await (favorited ? unfavoriteArticle(slug) : favoriteArticle(slug));
+    store.dispatch(endSubmittingFavorite({ index, favorited: !favorited }));
   };
 }

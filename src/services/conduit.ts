@@ -47,12 +47,12 @@ export async function getUser(): Promise<User> {
   return guard(object({ user: userDecoder }))(data).user;
 }
 
-export async function favoriteArticle(slug: string): Promise<Article> {
-  return guard(object({ article: articleDecoder }))((await axios.post(`articles/${slug}/favorite`)).data).article;
+export async function favoriteArticle(slug: string): Promise<void> {
+  await axios.post(`articles/${slug}/favorite`);
 }
 
-export async function unfavoriteArticle(slug: string): Promise<Article> {
-  return guard(object({ article: articleDecoder }))((await axios.delete(`articles/${slug}/favorite`)).data).article;
+export async function unfavoriteArticle(slug: string): Promise<void> {
+  await axios.delete(`articles/${slug}/favorite`);
 }
 
 export async function updateSettings(user: UserSettings): Promise<Result<User, GenericErrors>> {
@@ -129,7 +129,7 @@ export async function getArticleComments(slug: string): Promise<Comment[]> {
   return guard(object({ comments: array(commentDecoder) }))(data).comments;
 }
 
-export async function deleteComment(slug: string, commentId: number): Promise<void> {
+export async function deleteComment(slug: string, commentId: string): Promise<void> {
   await axios.delete(`articles/${slug}/comments/${commentId}`);
 }
 
