@@ -1,6 +1,6 @@
-import { Err, Ok, Result } from '@hqoss/monads';
+import {Err, Ok, Result} from '@hqoss/monads';
 import axios from 'axios';
-import { array, guard, object, string } from 'decoders';
+import {array, guard, object, string} from 'decoders';
 import settings from '../config/settings';
 import {
   Article,
@@ -11,11 +11,11 @@ import {
   MultipleArticles,
   multipleArticlesDecoder,
 } from '../types/article';
-import { Comment, commentDecoder } from '../types/comment';
-import { GenericErrors, genericErrorsDecoder } from '../types/error';
-import { objectToQueryString } from '../types/object';
-import { Profile, profileDecoder } from '../types/profile';
-import { User, userDecoder, UserForRegistration, UserSettings } from '../types/user';
+import {Comment, commentDecoder} from '../types/comment';
+import {GenericErrors, genericErrorsDecoder} from '../types/error';
+import {objectToQueryString} from '../types/object';
+import {Profile, profileDecoder} from '../types/profile';
+import {User, userDecoder, UserForRegistration, UserSettings} from '../types/user';
 
 axios.defaults.baseURL = settings.baseApiUrl;
 
@@ -57,7 +57,7 @@ export async function unfavoriteArticle(slug: string): Promise<void> {
 
 export async function updateSettings(user: UserSettings): Promise<Result<User, GenericErrors>> {
   try {
-    const { data } = await axios.put('user', user);
+    const {data} = await axios.put('user', {user});
 
     return Ok(guard(object({ user: userDecoder }))(data).user);
   } catch ({ data }) {

@@ -1,5 +1,5 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import {MemoryRouter, Route} from 'react-router-dom';
 import {
   createComment,
   deleteArticle,
@@ -11,11 +11,11 @@ import {
   unfavoriteArticle,
   unfollowUser,
 } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { Comment } from '../../../types/comment';
-import { redirect } from '../../../types/location';
-import { initializeApp, loadUser } from '../../App/App.slice';
-import { ArticlePage } from './ArticlePage';
+import {store} from '../../../state/store';
+import {Comment} from '../../../types/comment';
+import {redirect} from '../../../types/location';
+import {initializeApp, loadUser} from '../../App/App.slice';
+import {ArticlePage} from './ArticlePage';
 
 jest.mock('../../../services/conduit.ts');
 
@@ -115,8 +115,18 @@ describe('For guest', () => {
   it('Should show comments', async () => {
     mockedGetArticle.mockResolvedValueOnce(defaultArticle);
     mockedGetArticleComments.mockResolvedValueOnce([
-      { ...defaultComment, id: '2', body: 'First Comment', author: { ...defaultComment.author, username: 'James' } },
-      { ...defaultComment, id: '3', body: 'Second Comment', author: { ...defaultComment.author, username: 'jakelson' } },
+      {
+        ...defaultComment,
+        id: '2',
+        body: 'First Comment',
+        author: {...defaultComment.author, username: 'James'}
+      },
+      {
+        ...defaultComment,
+        id: '3',
+        body: 'Second Comment',
+        author: {...defaultComment.author, username: 'jakelson'},
+      },
     ]);
     await renderWithPath('sample-slug');
 
@@ -230,7 +240,7 @@ describe('For non article owner User', () => {
     mockedGetArticleComments.mockResolvedValueOnce([]);
     await renderWithPath('sample-slug');
 
-    mockedFavoriteArticle.mockResolvedValueOnce({ ...defaultArticle, favorited: true });
+    mockedFavoriteArticle.mockResolvedValueOnce();
     await act(async () => {
       fireEvent.click(screen.queryAllByText('Favorite Article')[0]);
     });
@@ -249,7 +259,7 @@ describe('For non article owner User', () => {
     mockedGetArticleComments.mockResolvedValueOnce([]);
     await renderWithPath('sample-slug');
 
-    mockedUnfavoriteArticle.mockResolvedValueOnce({ ...defaultArticle, favorited: false });
+    mockedUnfavoriteArticle.mockResolvedValueOnce();
     await act(async () => {
       fireEvent.click(screen.queryAllByText('Unfavorite Article')[0]);
     });

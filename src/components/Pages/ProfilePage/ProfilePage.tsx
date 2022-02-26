@@ -1,24 +1,28 @@
-import { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import { followUser, getArticles, getProfile, unfollowUser } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { useStore } from '../../../state/storeHooks';
-import { redirect } from '../../../types/location';
-import { Profile } from '../../../types/profile';
-import { ArticlesViewer } from '../../ArticlesViewer/ArticlesViewer';
-import { changePage, loadArticles, startLoadingArticles } from '../../ArticlesViewer/ArticlesViewer.slice';
-import { UserInfo } from '../../UserInfo/UserInfo';
-import { initializeProfile, loadProfile, startSubmitting } from './ProfilePage.slice';
+import React, {useEffect} from 'react';
+import {useLocation, useParams} from 'react-router-dom';
+import {followUser, getArticles, getProfile, unfollowUser} from '../../../services/conduit';
+import {store} from '../../../state/store';
+import {useStore} from '../../../state/storeHooks';
+import {redirect} from '../../../types/location';
+import {Profile} from '../../../types/profile';
+import {ArticlesViewer} from '../../ArticlesViewer/ArticlesViewer';
+import {
+  changePage,
+  loadArticles,
+  startLoadingArticles
+} from '../../ArticlesViewer/ArticlesViewer.slice';
+import {UserInfo} from '../../UserInfo/UserInfo';
+import {initializeProfile, loadProfile, startSubmitting} from './ProfilePage.slice';
 
 export function ProfilePage() {
-  const { username } = useParams<{ username: string }>();
+  const {username} = useParams<{ username: string }>();
   const favorites = useLocation().pathname.endsWith('favorites');
 
   useEffect(() => {
     onLoad(username, favorites);
   }, [username]);
 
-  const { profile, submitting } = useStore(({ profile }) => profile);
+  const {profile, submitting} = useStore(({profile}) => profile);
 
   return (
     <div className='profile-page'>

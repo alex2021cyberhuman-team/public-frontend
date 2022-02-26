@@ -1,8 +1,8 @@
-import { FC, Fragment } from 'react';
-import { FormGroup, ListFormGroup, TextAreaFormGroup } from '../FormGroup/FormGroup';
-import { GenericFormField } from '../../types/genericFormField';
-import { GenericErrors } from '../../types/error';
-import { Errors } from '../Errors/Errors';
+import React, {FC, Fragment} from 'react';
+import {FormGroup, ListFormGroup, TextAreaFormGroup} from '../FormGroup/FormGroup';
+import {GenericFormField} from '../../types/genericFormField';
+import {GenericErrors} from '../../types/error';
+import {Errors} from '../Errors/Errors';
 
 export interface GenericFormProps {
   fields: GenericFormField[];

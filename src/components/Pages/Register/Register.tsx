@@ -1,21 +1,28 @@
-import { dispatchOnCall, store } from '../../../state/store';
-import { useStoreWithInitializer } from '../../../state/storeHooks';
-import { buildGenericFormField } from '../../../types/genericFormField';
-import { GenericForm } from '../../GenericForm/GenericForm';
-import { initializeRegister, RegisterState, startSigningUp, updateErrors, updateField } from './Register.slice';
-import { loadUserIntoApp, UserForRegistration } from '../../../types/user';
-import { signUp } from '../../../services/conduit';
-import { ContainerPage } from '../../ContainerPage/ContainerPage';
+import React from 'react';
+import {dispatchOnCall, store} from '../../../state/store';
+import {useStoreWithInitializer} from '../../../state/storeHooks';
+import {buildGenericFormField} from '../../../types/genericFormField';
+import {GenericForm} from '../../GenericForm/GenericForm';
+import {
+    initializeRegister,
+    RegisterState,
+    startSigningUp,
+    updateErrors,
+    updateField
+} from './Register.slice';
+import {loadUserIntoApp, UserForRegistration} from '../../../types/user';
+import {signUp} from '../../../services/conduit';
+import {ContainerPage} from '../../ContainerPage/ContainerPage';
 
 export function Register() {
-  const { errors, signingUp, user } = useStoreWithInitializer(
-    ({ register }) => register,
-    dispatchOnCall(initializeRegister())
-  );
+    const {errors, signingUp, user} = useStoreWithInitializer(
+        ({register}) => register,
+        dispatchOnCall(initializeRegister())
+    );
 
-  return (
-    <div className='auth-page'>
-      <ContainerPage>
+    return (
+        <div className='auth-page'>
+            <ContainerPage>
         <div className='col-md-6 offset-md-3 col-xs-12'>
           <h1 className='text-xs-center'>Sign up</h1>
           <p className='text-xs-center'>

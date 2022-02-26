@@ -1,11 +1,12 @@
-import { range } from 'ramda';
+import React from 'react';
+import {range} from 'ramda';
 
 export function Pagination({
-  currentPage,
-  count,
-  itemsPerPage,
-  onPageChange,
-}: {
+                             currentPage,
+                             count,
+                             itemsPerPage,
+                             onPageChange,
+                           }: {
   currentPage: number;
   count: number;
   itemsPerPage: number;
