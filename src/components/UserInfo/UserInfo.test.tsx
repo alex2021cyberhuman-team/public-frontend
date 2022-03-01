@@ -1,17 +1,17 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { store } from '../../state/store';
-import { loadUser } from '../App/App.slice';
-import { UserInfo } from './UserInfo';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import {store} from '../../state/store';
+import {loadUser} from '../App/App.slice';
+import {UserInfo} from './UserInfo';
 
 beforeEach(async () => {
-  await act(async () => {
-    store.dispatch(
-      loadUser({
-        email: 'jake@jake.jake',
-        token: 'jwt.token.here',
-        username: 'jake',
-        bio: 'I work at statefarm',
-        image: null,
+    await act(async () => {
+        store.dispatch(
+            loadUser({
+                email: 'jake@jake.jake',
+                token: 'jwt.token.here',
+                username: 'jake',
+                bio: 'I work at statefarm',
+                image: null,
       })
     );
   });
@@ -22,13 +22,14 @@ it('Should toggle favorite', async () => {
   await act(async () => {
     render(
       <UserInfo
-        user={{
-          username: 'test jack',
-          bio: 'I work at statefarm',
-          image: null,
-          following: false,
-        }}
-        onFollowToggle={mockOnFollowToggle}
+          user={{
+              username: 'test jack',
+              bio: 'I work at statefarm',
+              image: null,
+              following: false,
+          }}
+          disabled={false}
+          onFollowToggle={mockOnFollowToggle}
       />
     );
 
@@ -43,13 +44,14 @@ it('Should toggle favorite for followed', async () => {
   await act(async () => {
     render(
       <UserInfo
-        user={{
-          username: 'test jack',
-          bio: 'I work at statefarm',
-          image: null,
-          following: true,
-        }}
-        onFollowToggle={mockOnFollowToggle}
+          user={{
+              username: 'test jack',
+              bio: 'I work at statefarm',
+              image: null,
+              following: true,
+          }}
+          disabled={false}
+          onFollowToggle={mockOnFollowToggle}
       />
     );
 
@@ -64,13 +66,14 @@ it('Should trigger edit settings', async () => {
   await act(async () => {
     render(
       <UserInfo
-        user={{
-          username: 'jake',
-          bio: 'I work at statefarm',
-          image: null,
-          following: true,
-        }}
-        onEditSettings={mockOnEditSettings}
+          user={{
+              username: 'jake',
+              bio: 'I work at statefarm',
+              image: null,
+              following: true,
+          }}
+          disabled={false}
+          onEditSettings={mockOnEditSettings}
       />
     );
 

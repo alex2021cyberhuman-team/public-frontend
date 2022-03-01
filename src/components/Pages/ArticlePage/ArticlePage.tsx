@@ -1,38 +1,39 @@
-import { Option } from '@hqoss/monads';
-import { format } from 'date-fns';
-import React, { Fragment, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import {Option} from '@hqoss/monads';
+import {format} from 'date-fns';
+import React, {Fragment, useEffect} from 'react';
+import {Link, useParams} from 'react-router-dom';
 import {
-  createComment,
-  deleteArticle,
-  deleteComment,
-  favoriteArticle,
-  followUser,
-  getArticle,
-  getArticleComments,
-  unfavoriteArticle,
-  unfollowUser,
+    createComment,
+    deleteArticle,
+    deleteComment,
+    favoriteArticle,
+    followUser,
+    getArticle,
+    getArticleComments,
+    unfavoriteArticle,
+    unfollowUser,
 } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { useStore } from '../../../state/storeHooks';
-import { Article } from '../../../types/article';
-import { Comment } from '../../../types/comment';
-import { redirect } from '../../../types/location';
-import { classObjectToClassName } from '../../../types/style';
-import { User } from '../../../types/user';
-import { TagList } from '../../ArticlePreview/ArticlePreview';
+import {store} from '../../../state/store';
+import {useStore} from '../../../state/storeHooks';
+import {Article} from '../../../types/article';
+import {Comment} from '../../../types/comment';
+import {redirect} from '../../../types/location';
+import {classObjectToClassName} from '../../../types/style';
+import {User} from '../../../types/user';
+import {TagList} from '../../ArticlePreview/ArticlePreview';
 import {
-  CommentSectionState,
-  initializeArticlePage,
-  loadArticle,
-  loadComments,
-  MetaSectionState,
-  startDeletingArticle,
-  startSubmittingComment,
-  startSubmittingFavorite,
-  startSubmittingFollow,
-  updateAuthor,
-  updateCommentBody,
+    CommentSectionState,
+    endSubmittingFavorite,
+    initializeArticlePage,
+    loadArticle,
+    loadComments,
+    MetaSectionState,
+    startDeletingArticle,
+    startSubmittingComment,
+    startSubmittingFavorite,
+    startSubmittingFollow,
+    updateAuthor,
+    updateCommentBody,
 } from './ArticlePage.slice';
 
 export function ArticlePage() {
@@ -211,15 +212,15 @@ async function onFollow(username: string, following: boolean) {
 }
 
 async function onFavorite(slug: string, favorited: boolean) {
-  if (store.getState().app.user.isNone()) {
-    redirect('register');
-    return;
-  }
+    if (store.getState().app.user.isNone()) {
+        redirect('register');
+        return;
+    }
 
-  store.dispatch(startSubmittingFavorite());
+    store.dispatch(startSubmittingFavorite());
 
-  const article = await (favorited ? unfavoriteArticle : favoriteArticle)(slug);
-  store.dispatch(loadArticle(article));
+    await (favorited ? unfavoriteArticle : favoriteArticle)(slug);
+    store.dispatch(endSubmittingFavorite({favorited}));
 }
 
 function OwnerArticleMetaActions({
@@ -388,7 +389,7 @@ function ArticleComment({
   );
 }
 
-async function onDeleteComment(slug: string, id: number) {
+async function onDeleteComment(slug: string, id: string) {
   await deleteComment(slug, id);
   store.dispatch(loadComments(await getArticleComments(slug)));
 }

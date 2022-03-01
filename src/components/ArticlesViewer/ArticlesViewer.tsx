@@ -1,22 +1,26 @@
-import { Fragment } from 'react';
-import { favoriteArticle, unfavoriteArticle } from '../../services/conduit';
-import { store } from '../../state/store';
-import { useStore } from '../../state/storeHooks';
-import { Article } from '../../types/article';
-import { classObjectToClassName } from '../../types/style';
-import { ArticlePreview } from '../ArticlePreview/ArticlePreview';
-import { Pagination } from '../Pagination/Pagination';
-import { ArticleViewerState, endSubmittingFavorite, startSubmittingFavorite } from './ArticlesViewer.slice';
+import React, {Fragment} from 'react';
+import {favoriteArticle, unfavoriteArticle} from '../../services/conduit';
+import {store} from '../../state/store';
+import {useStore} from '../../state/storeHooks';
+import {Article} from '../../types/article';
+import {classObjectToClassName} from '../../types/style';
+import {ArticlePreview} from '../ArticlePreview/ArticlePreview';
+import {Pagination} from '../Pagination/Pagination';
+import {
+    ArticleViewerState,
+    endSubmittingFavorite,
+    startSubmittingFavorite
+} from './ArticlesViewer.slice';
 
 export function ArticlesViewer({
-  toggleClassName,
-  tabs,
-  selectedTab,
-  onPageChange,
-  onTabChange,
-}: {
-  toggleClassName: string;
-  tabs: string[];
+                                   toggleClassName,
+                                   tabs,
+                                   selectedTab,
+                                   onPageChange,
+                                   onTabChange,
+                               }: {
+    toggleClassName: string;
+    tabs: string[];
   selectedTab: string;
   onPageChange?: (index: number) => void;
   onTabChange?: (tab: string) => void;
@@ -106,7 +110,7 @@ function onFavoriteToggle(index: number, { slug, favorited }: Article) {
     }
     store.dispatch(startSubmittingFavorite(index));
 
-    const article = await (favorited ? unfavoriteArticle(slug) : favoriteArticle(slug));
-    store.dispatch(endSubmittingFavorite({ index, article }));
+    await (favorited ? unfavoriteArticle(slug) : favoriteArticle(slug));
+    store.dispatch(endSubmittingFavorite({ index, favorited: !favorited }));
   };
 }

@@ -1,16 +1,22 @@
-import React, { Fragment, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getArticle, updateArticle } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { useStore } from '../../../state/storeHooks';
-import { ArticleEditor } from '../../ArticleEditor/ArticleEditor';
-import { initializeEditor, loadArticle, startSubmitting, updateErrors } from '../../ArticleEditor/ArticleEditor.slice';
+import React, {Fragment, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {getArticle, updateArticle} from '../../../services/conduit';
+import {store} from '../../../state/store';
+import {useStore} from '../../../state/storeHooks';
+import {ArticleEditor} from '../../ArticleEditor/ArticleEditor';
+import {
+  initializeEditor,
+  loadArticle,
+  startSubmitting,
+  updateErrors
+} from '../../ArticleEditor/ArticleEditor.slice';
 
 export function EditArticle() {
-  const { slug } = useParams<{ slug: string }>();
-  const { loading } = useStore(({ editor }) => editor);
+  const {slug} = useParams<{ slug: string }>();
+  const {loading} = useStore(({editor}) => editor);
 
   useEffect(() => {
+    // noinspection JSIgnoredPromiseFromCall
     _loadArticle(slug);
   }, [slug]);
 

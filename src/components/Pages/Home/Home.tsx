@@ -1,22 +1,27 @@
-import { Option } from '@hqoss/monads';
-import { getArticles, getFeed, getTags } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { useStoreWithInitializer } from '../../../state/storeHooks';
-import { FeedFilters } from '../../../types/article';
-import { ArticlesViewer } from '../../ArticlesViewer/ArticlesViewer';
-import { changePage, loadArticles, startLoadingArticles } from '../../ArticlesViewer/ArticlesViewer.slice';
-import { ContainerPage } from '../../ContainerPage/ContainerPage';
-import { changeTab, loadTags, startLoadingTags } from './Home.slice';
+import React from 'react';
+import {Option} from '@hqoss/monads';
+import {getArticles, getFeed, getTags} from '../../../services/conduit';
+import {store} from '../../../state/store';
+import {useStoreWithInitializer} from '../../../state/storeHooks';
+import {FeedFilters} from '../../../types/article';
+import {ArticlesViewer} from '../../ArticlesViewer/ArticlesViewer';
+import {
+  changePage,
+  loadArticles,
+  startLoadingArticles
+} from '../../ArticlesViewer/ArticlesViewer.slice';
+import {ContainerPage} from '../../ContainerPage/ContainerPage';
+import {changeTab, loadTags, startLoadingTags} from './Home.slice';
 
 export function Home() {
-  const { tags, selectedTab } = useStoreWithInitializer(({ home }) => home, load);
+  const {tags, selectedTab} = useStoreWithInitializer(({home}) => home, load);
 
   return (
-    <div className='home-page'>
-      {renderBanner()}
-      <ContainerPage>
-        <div className='col-md-9'>
-          <ArticlesViewer
+      <div className='home-page'>
+        {renderBanner()}
+        <ContainerPage>
+          <div className='col-md-9'>
+            <ArticlesViewer
             toggleClassName='feed-toggle'
             selectedTab={selectedTab}
             tabs={buildTabsNames(selectedTab)}

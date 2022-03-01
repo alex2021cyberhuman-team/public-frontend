@@ -1,6 +1,6 @@
-import { Err, Ok, Result } from '@hqoss/monads';
+import {Err, Ok, Result} from '@hqoss/monads';
 import axios from 'axios';
-import { array, guard, object, string } from 'decoders';
+import {array, guard, object, string} from 'decoders';
 import settings from '../config/settings';
 import {
   Article,
@@ -11,11 +11,11 @@ import {
   MultipleArticles,
   multipleArticlesDecoder,
 } from '../types/article';
-import { Comment, commentDecoder } from '../types/comment';
-import { GenericErrors, genericErrorsDecoder } from '../types/error';
-import { objectToQueryString } from '../types/object';
-import { Profile, profileDecoder } from '../types/profile';
-import { User, userDecoder, UserForRegistration, UserSettings } from '../types/user';
+import {Comment, commentDecoder} from '../types/comment';
+import {GenericErrors, genericErrorsDecoder} from '../types/error';
+import {objectToQueryString} from '../types/object';
+import {Profile, profileDecoder} from '../types/profile';
+import {User, userDecoder, UserForRegistration, UserSettings} from '../types/user';
 
 axios.defaults.baseURL = settings.baseApiUrl;
 
@@ -47,17 +47,17 @@ export async function getUser(): Promise<User> {
   return guard(object({ user: userDecoder }))(data).user;
 }
 
-export async function favoriteArticle(slug: string): Promise<Article> {
-  return guard(object({ article: articleDecoder }))((await axios.post(`articles/${slug}/favorite`)).data).article;
+export async function favoriteArticle(slug: string): Promise<void> {
+  await axios.post(`articles/${slug}/favorite`);
 }
 
-export async function unfavoriteArticle(slug: string): Promise<Article> {
-  return guard(object({ article: articleDecoder }))((await axios.delete(`articles/${slug}/favorite`)).data).article;
+export async function unfavoriteArticle(slug: string): Promise<void> {
+  await axios.delete(`articles/${slug}/favorite`);
 }
 
 export async function updateSettings(user: UserSettings): Promise<Result<User, GenericErrors>> {
   try {
-    const { data } = await axios.put('user', user);
+    const {data} = await axios.put('user', {user});
 
     return Ok(guard(object({ user: userDecoder }))(data).user);
   } catch ({ data }) {
@@ -129,7 +129,7 @@ export async function getArticleComments(slug: string): Promise<Comment[]> {
   return guard(object({ comments: array(commentDecoder) }))(data).comments;
 }
 
-export async function deleteComment(slug: string, commentId: number): Promise<void> {
+export async function deleteComment(slug: string, commentId: string): Promise<void> {
   await axios.delete(`articles/${slug}/comments/${commentId}`);
 }
 
