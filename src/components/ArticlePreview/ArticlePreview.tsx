@@ -1,16 +1,17 @@
-import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
-import { Article } from '../../types/article';
+import React from 'react';
+import {format} from 'date-fns';
+import {Link} from 'react-router-dom';
+import {Article} from '../../types/article';
 
 export function ArticlePreview({
-  article: {
-    createdAt,
-    favorited,
-    favoritesCount,
-    slug,
-    title,
-    description,
-    tagList,
+                                 article: {
+                                   createdAt,
+                                   favorited,
+                                   favoritesCount,
+                                   slug,
+                                   title,
+                                   description,
+                                   tagList,
     author: { image, username },
   },
   isSubmitting,

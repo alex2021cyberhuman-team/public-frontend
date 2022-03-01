@@ -1,12 +1,13 @@
-import { useStore } from '../../state/storeHooks';
-import { Profile } from '../../types/profile';
+import React from 'react';
+import {useStore} from '../../state/storeHooks';
+import {Profile} from '../../types/profile';
 
 export function UserInfo({
-  user: { image, username, bio, following },
-  disabled,
-  onFollowToggle,
-  onEditSettings,
-}: {
+                           user: {image, username, bio, following},
+                           disabled,
+                           onFollowToggle,
+                           onEditSettings,
+                         }: {
   user: Profile;
   disabled: boolean;
   onFollowToggle?: () => void;

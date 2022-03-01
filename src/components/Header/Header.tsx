@@ -1,17 +1,17 @@
-import { Fragment } from 'react';
-import { HashRouter, NavLink } from 'react-router-dom';
-import { useStore } from '../../state/storeHooks';
-import { User } from '../../types/user';
+import React, {Fragment} from 'react';
+import {HashRouter, NavLink} from 'react-router-dom';
+import {useStore} from '../../state/storeHooks';
+import {User} from '../../types/user';
 
 export function Header() {
-  const { user } = useStore(({ app }) => app);
+    const {user} = useStore(({app}) => app);
 
-  return (
-    <nav className='navbar navbar-light'>
-      <div className='container'>
-        <a className='navbar-brand' href='/#/'>
-          conduit
-        </a>
+    return (
+        <nav className='navbar navbar-light'>
+            <div className='container'>
+                <a className='navbar-brand' href='/#/'>
+                    conduit
+                </a>
         <ul className='nav navbar-nav pull-xs-right'>
           <HashRouter>
             <NavItem text='Home' href='/' />
