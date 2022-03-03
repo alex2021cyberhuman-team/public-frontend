@@ -11,6 +11,7 @@ import {
     endSubmittingFavorite,
     startSubmittingFavorite
 } from './ArticlesViewer.slice';
+import {getTabName} from "../../services/tabs";
 
 export function ArticlesViewer({
                                    toggleClassName,
@@ -51,7 +52,7 @@ function ArticlesTabSet({
     <div className={toggleClassName}>
       <ul className='nav nav-pills outline-active'>
         {tabs.map((tab) => (
-          <Tab key={tab} tab={tab} active={tab === selectedTab} onClick={() => onTabChange && onTabChange(tab)} />
+          <Tab key={tab} tab={getTabName(tab)} active={tab === selectedTab} onClick={() => onTabChange && onTabChange(tab)} />
         ))}
       </ul>
     </div>

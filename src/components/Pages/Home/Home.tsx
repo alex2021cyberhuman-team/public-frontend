@@ -12,6 +12,8 @@ import {
 } from '../../ArticlesViewer/ArticlesViewer.slice';
 import {ContainerPage} from '../../ContainerPage/ContainerPage';
 import {changeTab, loadTags, startLoadingTags} from './Home.slice';
+import localizedStrings from '../../../services/localization';
+import tabs from "../../../services/tabs";
 
 export function Home() {
   const {tags, selectedTab} = useStoreWithInitializer(({home}) => home, load);
@@ -43,7 +45,7 @@ async function load() {
   store.dispatch(startLoadingTags());
 
   if (store.getState().app.user.isSome()) {
-    store.dispatch(changeTab('Your Feed'));
+    store.dispatch(changeTab(tabs.yourFeedTab));
   }
 
   const multipleArticles = await getFeedOrGlobalArticles();
@@ -57,8 +59,8 @@ function renderBanner() {
   return (
     <div className='banner'>
       <div className='container'>
-        <h1 className='logo-font'>conduit</h1>
-        <p>A place to share your knowledge.</p>
+        <h1 className='logo-font'>{localizedStrings.home.banner.logoTitle}</h1>
+        <p>{localizedStrings.home.banner.logoText}</p>
       </div>
     </div>
   );
@@ -67,7 +69,7 @@ function renderBanner() {
 function buildTabsNames(selectedTab: string) {
   const { user } = store.getState().app;
 
-  return Array.from(new Set([...(user.isSome() ? ['Your Feed'] : []), 'Global Feed', selectedTab]));
+  return Array.from(new Set([...(user.isSome() ? [tabs.yourFeedTab] : []), tabs.globalFeedTab, selectedTab]));
 }
 
 async function onPageChange(index: number) {
@@ -92,7 +94,7 @@ async function getFeedOrGlobalArticles(filters: FeedFilters = {}) {
     tag: selectedTab.slice(2),
   };
 
-  return await (selectedTab === 'Your Feed' ? getFeed : getArticles)(
+  return await (selectedTab === tabs.yourFeedTab ? getFeed : getArticles)(
     !selectedTab.startsWith('#') ? filters : finalFilters
   );
 }
@@ -100,10 +102,10 @@ async function getFeedOrGlobalArticles(filters: FeedFilters = {}) {
 function HomeSidebar({ tags }: { tags: Option<string[]> }) {
   return (
     <div className='sidebar'>
-      <p>Popular Tags</p>
+      <p>{localizedStrings.home.tags.popularTags}</p>
 
       {tags.match({
-        none: () => <span>Loading tags...</span>,
+        none: () => <span>{localizedStrings.home.tags.load}</span>,
         some: (tags) => (
           <div className='tag-list'>
             {' '}

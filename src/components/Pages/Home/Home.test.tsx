@@ -5,6 +5,7 @@ import { store } from '../../../state/store';
 import { initializeApp, loadUser } from '../../App/App.slice';
 import { Home } from './Home';
 import { changeTab } from './Home.slice';
+import localizedStrings from "../../../services/localization";
 
 jest.mock('../../../services/conduit');
 
@@ -35,7 +36,7 @@ const defaultArticle = {
 beforeEach(async () => {
   await act(async () => {
     store.dispatch(initializeApp());
-    store.dispatch(changeTab('Global Feed'));
+    store.dispatch(changeTab(localizedStrings.home.feed.globalFeed));
   });
 });
 
@@ -67,7 +68,7 @@ it('Should load articles', async () => {
   screen.getByText('google');
   screen.getByText('Test 1');
   screen.getByText('Test 2');
-  expect(store.getState().home.selectedTab).toMatch('Global Feed');
+  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.globalFeed);
 });
 
 it('Should show message if there are no articles', async () => {
@@ -121,7 +122,7 @@ it('Should load feed articles if user is logged in', async () => {
     );
   });
 
-  expect(store.getState().home.selectedTab).toMatch('Your Feed');
+  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.yourFeed);
 });
 
 it('Should redirect to login on favorite if the user is not logged in', async () => {
@@ -278,10 +279,10 @@ it('Should change tabs', async () => {
   });
 
   await act(async () => {
-    fireEvent.click(screen.getByText('Global Feed'));
+    fireEvent.click(screen.getByText(localizedStrings.home.feed.globalFeed));
   });
 
-  expect(store.getState().home.selectedTab).toMatch('Global Feed');
+  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.globalFeed);
 
   mockedGetFeed.mockResolvedValueOnce({
     articles: [{ ...defaultArticle, favorited: true }],
@@ -289,10 +290,10 @@ it('Should change tabs', async () => {
   });
 
   await act(async () => {
-    fireEvent.click(screen.getByText('Your Feed'));
+    fireEvent.click(screen.getByText(localizedStrings.home.feed.yourFeed));
   });
 
-  expect(store.getState().home.selectedTab).toMatch('Your Feed');
+  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.yourFeed);
 
   mockedGetArticles.mockResolvedValueOnce({
     articles: [{ ...defaultArticle, favorited: true }],
