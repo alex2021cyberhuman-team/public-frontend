@@ -65,7 +65,7 @@
     "prettier": "^2.3.2"
   },
   "jest": {
-    "clearMocks": true,
+    "resetMocks": true,
     "collectCoverageFrom": [
       "!<rootDir>/src/index.tsx",
       "!<rootDir>/src/helpers/testsHelpers.ts"

@@ -1,15 +1,16 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { Pagination } from './Pagination';
+import React from 'react';
+import {fireEvent, render, screen} from '@testing-library/react';
+import {Pagination} from './Pagination';
 import R from 'ramda';
 
 it('Should render correct amount of page buttons', () => {
-  const { rerender } = render(<Pagination currentPage={1} count={500} itemsPerPage={10} />);
+  const {rerender} = render(<Pagination currentPage={1} count={500} itemsPerPage={10}/>);
   expectPageButtonCount(50);
 
-  rerender(<Pagination currentPage={5} count={501} itemsPerPage={10} />);
+  rerender(<Pagination currentPage={5} count={501} itemsPerPage={10}/>);
   expectPageButtonCount(51);
 
-  rerender(<Pagination currentPage={1} count={100} itemsPerPage={15} />);
+  rerender(<Pagination currentPage={1} count={100} itemsPerPage={15}/>);
   expectPageButtonCount(7);
 });
 

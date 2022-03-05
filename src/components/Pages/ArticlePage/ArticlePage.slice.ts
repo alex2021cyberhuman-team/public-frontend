@@ -3,6 +3,7 @@ import {None, Option, Some} from '@hqoss/monads';
 import {Article} from '../../../types/article';
 import {Comment} from '../../../types/comment';
 import {Profile} from '../../../types/profile';
+import * as R from "ramda";
 
 export interface CommentSectionState {
   comments: Option<Comment[]>;
@@ -62,12 +63,10 @@ const slice = createSlice({
         {payload: {favorited}}: PayloadAction<{ favorited: boolean }>
     ) => {
       state.article = state.article.map(
-          (val) => {
-            const newVal = {...val};
-            newVal.favorited = favorited;
-            newVal.favoritesCount += favorited ? +1 : -1;
-            return newVal;
-          }
+          R.evolve({
+            favorited: R.not,
+            favoritesCount: R.ifElse(R.always(favorited), R.inc, R.dec)
+          })
       );
       state.metaSection.submittingFavorite = false;
     },

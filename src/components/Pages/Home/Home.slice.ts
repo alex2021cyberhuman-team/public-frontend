@@ -23,7 +23,6 @@ const slice = createSlice({
     },
     changeTab: (state, { payload: tab }: PayloadAction<string>) => {
       state.selectedTab = tab;
-      console.log(state.selectedTab, tab);
     },
   },
 });

@@ -1,16 +1,17 @@
-import { Err, Ok } from '@hqoss/monads';
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { signUp } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { Register } from './Register';
-import { initializeRegister } from './Register.slice';
+import React from 'react';
+import {Err, Ok} from '@hqoss/monads';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import {signUp} from '../../../services/conduit';
+import {store} from '../../../state/store';
+import {Register} from './Register';
+import {initializeRegister} from './Register.slice';
 
 jest.mock('../../../services/conduit.ts');
 
 beforeEach(() => {
   act(() => {
     store.dispatch(initializeRegister());
-    render(<Register />);
+    render(<Register/>);
   });
 });
 

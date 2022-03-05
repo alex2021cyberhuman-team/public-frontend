@@ -1,11 +1,19 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { favoriteArticle, getArticles, getFeed, getTags, unfavoriteArticle } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { initializeApp, loadUser } from '../../App/App.slice';
-import { Home } from './Home';
-import { changeTab } from './Home.slice';
+import React from 'react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import {MemoryRouter} from 'react-router-dom';
+import {
+  favoriteArticle,
+  getArticles,
+  getFeed,
+  getTags,
+  unfavoriteArticle
+} from '../../../services/conduit';
+import {store} from '../../../state/store';
+import {initializeApp, loadUser} from '../../App/App.slice';
+import {Home} from './Home';
+import {changeTab} from './Home.slice';
 import localizedStrings from "../../../services/localization";
+import tabs from "../../../services/tabs";
 
 jest.mock('../../../services/conduit');
 
@@ -68,7 +76,7 @@ it('Should load articles', async () => {
   screen.getByText('google');
   screen.getByText('Test 1');
   screen.getByText('Test 2');
-  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.globalFeed);
+  expect(store.getState().home.selectedTab).toMatch(tabs.globalFeedTab);
 });
 
 it('Should show message if there are no articles', async () => {
@@ -122,7 +130,7 @@ it('Should load feed articles if user is logged in', async () => {
     );
   });
 
-  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.yourFeed);
+  expect(store.getState().home.selectedTab).toMatch(tabs.yourFeedTab);
 });
 
 it('Should redirect to login on favorite if the user is not logged in', async () => {
@@ -282,7 +290,7 @@ it('Should change tabs', async () => {
     fireEvent.click(screen.getByText(localizedStrings.home.feed.globalFeed));
   });
 
-  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.globalFeed);
+  expect(store.getState().home.selectedTab).toMatch(tabs.globalFeedTab);
 
   mockedGetFeed.mockResolvedValueOnce({
     articles: [{ ...defaultArticle, favorited: true }],
@@ -293,7 +301,7 @@ it('Should change tabs', async () => {
     fireEvent.click(screen.getByText(localizedStrings.home.feed.yourFeed));
   });
 
-  expect(store.getState().home.selectedTab).toMatch(localizedStrings.home.feed.yourFeed);
+  expect(store.getState().home.selectedTab).toMatch(tabs.yourFeedTab);
 
   mockedGetArticles.mockResolvedValueOnce({
     articles: [{ ...defaultArticle, favorited: true }],

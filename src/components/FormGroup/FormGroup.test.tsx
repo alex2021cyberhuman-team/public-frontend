@@ -1,15 +1,18 @@
-import { render, screen } from '@testing-library/react';
-import { ListFormGroup } from './FormGroup';
+import React from 'react';
+import {render, screen} from '@testing-library/react';
+import {ListFormGroup} from './FormGroup';
 
 it('Input should be large', () => {
   render(
-    <ListFormGroup
-      type='text'
-      placeholder='1234'
-      onChange={() => {}}
-      onEnter={() => {}}
-      lg
-      listValue={[]}
+      <ListFormGroup
+          type='text'
+          placeholder='1234'
+          onChange={() => {
+          }}
+          onEnter={() => {
+          }}
+          lg
+          listValue={[]}
       disabled
       value=''
       onRemoveItem={() => {}}

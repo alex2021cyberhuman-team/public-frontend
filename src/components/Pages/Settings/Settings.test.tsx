@@ -1,11 +1,12 @@
-import { store } from '../../../state/store';
-import { Settings } from './Settings';
-import { initializeSettings, startUpdate, updateErrors } from './Settings.slice';
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { updateSettings } from '../../../services/conduit';
-import { Err, Ok } from '@hqoss/monads';
+import React from 'react';
+import {store} from '../../../state/store';
+import {Settings} from './Settings';
+import {initializeSettings, startUpdate, updateErrors} from './Settings.slice';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import {updateSettings} from '../../../services/conduit';
+import {Err, Ok} from '@hqoss/monads';
 import axios from 'axios';
-import { loadUser } from '../../App/App.slice';
+import {loadUser} from '../../App/App.slice';
 
 jest.mock('../../../services/conduit.ts');
 jest.mock('axios');

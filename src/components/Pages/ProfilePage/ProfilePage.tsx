@@ -13,6 +13,7 @@ import {
 } from '../../ArticlesViewer/ArticlesViewer.slice';
 import {UserInfo} from '../../UserInfo/UserInfo';
 import {initializeProfile, loadProfile, startSubmitting} from './ProfilePage.slice';
+import tabs, {getProfilePageTabs} from "../../../services/tabs";
 
 export function ProfilePage() {
   const {username} = useParams<{ username: string }>();
@@ -25,37 +26,38 @@ export function ProfilePage() {
   const {profile, submitting} = useStore(({profile}) => profile);
 
   return (
-    <div className='profile-page'>
-      {profile.match({
-        none: () => (
-          <div className='article-preview' key={1}>
-            Loading profile...
-          </div>
-        ),
-        some: (profile) => (
-          <UserInfo
-            user={profile}
-            disabled={submitting}
-            onFollowToggle={onFollowToggle(profile)}
-            onEditSettings={() => redirect('settings')}
-          />
-        ),
-      })}
+      <div className='profile-page'>
+        {profile.match({
+          none: () => (
+              <div className='article-preview' key={1}>
+                Loading profile...
+              </div>
+          ),
+          some: (profile) => (
+              <UserInfo
+                  user={profile}
+                  disabled={submitting}
+                  onFollowToggle={onFollowToggle(profile)}
+                  onEditSettings={() => redirect('settings')}
+              />
+          ),
+        })}
 
-      <div className='container'>
-        <div className='row'>
-          <div className='col-xs-12 col-md-10 offset-md-1'>
-            <ArticlesViewer
-              toggleClassName='articles-toggle'
-              tabs={['My Articles', 'Favorited Articles']}
-              selectedTab={favorites ? 'Favorited Articles' : 'My Articles'}
-              onTabChange={onTabChange(username)}
-              onPageChange={onPageChange(username, favorites)}
-            />
+        <div className='container'>
+          <div className='row'>
+            <div className='col-xs-12 col-md-10 offset-md-1'>
+              <ArticlesViewer
+                  toggleClassName='articles-toggle'
+                  tabs={[tabs.favoritedArticlesTab, tabs.myArticlesTab]}
+                  tabsTranslation={getProfilePageTabs()}
+                  selectedTab={favorites ? tabs.favoritedArticlesTab : tabs.myArticlesTab}
+                  onTabChange={onTabChange(username)}
+                  onPageChange={onPageChange(username, favorites)}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
@@ -75,13 +77,16 @@ async function onLoad(username: string, favorites: boolean) {
 }
 
 async function getArticlesByType(username: string, favorites: boolean) {
-  const { currentPage } = store.getState().articleViewer;
-  return await getArticles({ [favorites ? 'favorited' : 'author']: username, offset: (currentPage - 1) * 10 });
+  const {currentPage} = store.getState().articleViewer;
+  return await getArticles({
+    [favorites ? 'favorited' : 'author']: username,
+    offset: (currentPage - 1) * 10
+  });
 }
 
 function onFollowToggle(profile: Profile): () => void {
   return async () => {
-    const { user } = store.getState().app;
+    const {user} = store.getState().app;
     if (user.isNone()) {
       redirect('register');
       return;
@@ -96,7 +101,7 @@ function onFollowToggle(profile: Profile): () => void {
 
 function onTabChange(username: string): (page: string) => void {
   return async (page) => {
-    const favorited = page === 'Favorited Articles';
+    const favorited = page === tabs.favoritedArticlesTab;
     location.hash = `#/profile/${username}${!favorited ? '' : '/favorites'}`;
     store.dispatch(startLoadingArticles());
     store.dispatch(loadArticles(await getArticlesByType(username, favorited)));

@@ -1,12 +1,13 @@
-import { Err, Ok } from '@hqoss/monads';
-import { fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
+import {Err, Ok} from '@hqoss/monads';
+import {fireEvent, render, screen} from '@testing-library/react';
 import axios from 'axios';
-import { act } from 'react-dom/test-utils';
-import { login } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { logout } from '../../App/App.slice';
-import { Login } from './Login';
-import { startLoginIn, updateField } from './Login.slice';
+import {act} from 'react-dom/test-utils';
+import {login} from '../../../services/conduit';
+import {store} from '../../../state/store';
+import {logout} from '../../App/App.slice';
+import {Login} from './Login';
+import {startLoginIn, updateField} from './Login.slice';
 
 jest.mock('../../../services/conduit');
 jest.mock('axios');
@@ -14,7 +15,7 @@ jest.mock('axios');
 const mockedLogin = login as jest.Mock<ReturnType<typeof login>>;
 
 it('Should render', () => {
-  render(<Login />);
+  render(<Login/>);
 });
 
 it('Should change email', () => {

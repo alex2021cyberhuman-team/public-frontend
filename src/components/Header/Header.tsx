@@ -13,7 +13,7 @@ export function Header() {
         <nav className='navbar navbar-light'>
             <div className='container'>
                 <a className='navbar-brand' href='/#/'>
-                    conduit
+                    {localizedStrings.header.logoTitle}
                 </a>
 
                 <ul className='nav navbar-nav pull-xs-left'>
@@ -21,11 +21,11 @@ export function Header() {
                 </ul>
                 <ul className='nav navbar-nav pull-xs-right'>
                     <HashRouter>
-                        <NavItem text='Home' href='/'/>
+                        <NavItem text={localizedStrings.header.homePage} href='/'/>
 
                         {user.match({
                             none: () => <GuestLinks/>,
-                            some: (user) => <UserLinks user={user}/>,
+                            some: (user) => <UserLinks user={user}/>
                         })}
                     </HashRouter>
                 </ul>
@@ -35,12 +35,10 @@ export function Header() {
 }
 
 function NavItem({text, href, icon}: { text: string; href: string; icon?: string }) {
-    // noinspection CheckTagEmptyBody
     return (
         <li className='nav-item'>
             <NavLink exact to={href} activeClassName='active' className='nav-link'>
-                {icon && <i className={icon}></i>}&nbsp;
-                {text}
+                {icon && <i className={icon}></i>}&nbsp;{text}
             </NavLink>
         </li>
     );
@@ -49,8 +47,8 @@ function NavItem({text, href, icon}: { text: string; href: string; icon?: string
 function GuestLinks() {
     return (
         <Fragment>
-            <NavItem text='Sign in' href='/login'/>
-            <NavItem text='Sign up' href='/register'/>
+            <NavItem text={localizedStrings.header.login} href='/login'/>
+            <NavItem text={localizedStrings.header.register} href='/register'/>
         </Fragment>
     );
 }
@@ -58,8 +56,8 @@ function GuestLinks() {
 function UserLinks({user: {username}}: { user: User }) {
     return (
         <Fragment>
-            <NavItem text='New Article' href='/editor' icon='ion-compose'/>
-            <NavItem text='Settings' href='/settings' icon='ion-gear-a'/>
+            <NavItem text={localizedStrings.header.newArticle} href='/editor' icon='ion-compose'/>
+            <NavItem text={localizedStrings.header.settings} href='/settings' icon='ion-gear-a'/>
             <NavItem text={`${username}`} href={`/profile/${username}`}/>
         </Fragment>
     );
@@ -88,12 +86,12 @@ function Languages() {
                         ? ' active'
                         : '');
                     return (
-                        <li className='nav-item'>
-                            <a key={code}
-                               id={`set-language-${code}`}
-                               href='#'
-                               className={className}
-                               onClick={() => onSetLanguageClick(code)}>{languagesTranslates.get(code)}</a>
+                        <li className='nav-item' key={`language-li-${code}`}>
+                            <a
+                                id={`set-language-${code}`}
+                                href='#'
+                                className={className}
+                                onClick={() => onSetLanguageClick(code)}>{languagesTranslates.get(code)}</a>
                         </li>
                     )
                 })

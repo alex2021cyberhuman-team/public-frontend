@@ -1,10 +1,11 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { Link, MemoryRouter, Route } from 'react-router-dom';
-import { followUser, getArticles, getProfile, unfollowUser } from '../../../services/conduit';
-import { store } from '../../../state/store';
-import { Profile } from '../../../types/profile';
-import { initializeApp, loadUser } from '../../App/App.slice';
-import { ProfilePage } from './ProfilePage';
+import React from 'react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import {Link, MemoryRouter, Route} from 'react-router-dom';
+import {followUser, getArticles, getProfile, unfollowUser} from '../../../services/conduit';
+import {store} from '../../../state/store';
+import {Profile} from '../../../types/profile';
+import {initializeApp, loadUser} from '../../App/App.slice';
+import {ProfilePage} from './ProfilePage';
 
 jest.mock('../../../services/conduit.ts');
 

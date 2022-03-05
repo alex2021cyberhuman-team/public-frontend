@@ -1,9 +1,10 @@
-import { act, render, screen } from '@testing-library/react';
+import React from 'react';
+import {act, render, screen} from '@testing-library/react';
 import axios from 'axios';
-import { getArticles, getFeed, getTags, getUser } from '../../services/conduit';
-import { store } from '../../state/store';
-import { App } from './App';
-import { initializeApp } from './App.slice';
+import {getArticles, getFeed, getTags, getUser} from '../../services/conduit';
+import {store} from '../../state/store';
+import {App} from './App';
+import {initializeApp} from './App.slice';
 
 jest.mock('../../services/conduit');
 jest.mock('axios');

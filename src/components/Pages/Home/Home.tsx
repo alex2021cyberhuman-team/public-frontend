@@ -13,7 +13,7 @@ import {
 import {ContainerPage} from '../../ContainerPage/ContainerPage';
 import {changeTab, loadTags, startLoadingTags} from './Home.slice';
 import localizedStrings from '../../../services/localization';
-import tabs from "../../../services/tabs";
+import tabs, {getHomePageTabs} from "../../../services/tabs";
 
 export function Home() {
   const {tags, selectedTab} = useStoreWithInitializer(({home}) => home, load);
@@ -24,11 +24,12 @@ export function Home() {
         <ContainerPage>
           <div className='col-md-9'>
             <ArticlesViewer
-            toggleClassName='feed-toggle'
-            selectedTab={selectedTab}
-            tabs={buildTabsNames(selectedTab)}
-            onPageChange={onPageChange}
-            onTabChange={onTabChange}
+                toggleClassName='feed-toggle'
+                tabsTranslation={getHomePageTabs()}
+                selectedTab={selectedTab}
+                tabs={buildTabsNames(selectedTab)}
+                onPageChange={onPageChange}
+                onTabChange={onTabChange}
           />
         </div>
 

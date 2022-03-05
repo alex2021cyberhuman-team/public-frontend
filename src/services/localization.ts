@@ -1,29 +1,6 @@
 import LocalizedStrings from 'react-localization';
 
 const localizedStrings = new LocalizedStrings({
-    ru: {
-        articleEditor: {
-            submitButtonText: 'Опубликовать Статью',
-            title: 'Заголовок статьи',
-            description: 'О чем будет статья?',
-            body: 'Напишите вашу статью (markdown будет поддерживаться)',
-            tag: 'Введите название тега и нажмите \'Enter\''
-        },
-        home: {
-            banner: {
-                logoTitle: 'Проводник',
-                logoText: 'Место, где вы можете делиться своими знаниями'
-            },
-            feed: {
-                yourFeed: 'Ваша лента',
-                globalFeed: 'Общая лента'
-            },
-            tags: {
-                load: 'Загрузка тегов...',
-                popularTags: 'Популярные теги'
-            }
-        }
-    },
     en: {
         articleEditor: {
             submitButtonText: 'Publish Article',
@@ -35,7 +12,7 @@ const localizedStrings = new LocalizedStrings({
         home: {
             banner: {
                 logoTitle: 'Conduit',
-                logoText: 'A place to share your knowledge'
+                logoText: 'A place to share your knowledge.'
             },
             feed: {
                 yourFeed: 'Your Feed',
@@ -45,6 +22,53 @@ const localizedStrings = new LocalizedStrings({
                 load: 'Loading tags...',
                 popularTags: 'Popular Tags'
             }
+        },
+        header: {
+            logoTitle: 'conduit',
+            login: 'Sign in',
+            register: 'Sign up',
+            newArticle: 'New Article',
+            settings: 'Settings',
+            homePage: 'Home'
+        },
+        profile: {
+            myArticles: 'My Articles',
+            favoritedArticles: 'Favorited Articles'
+        }
+    },
+    ru: {
+        articleEditor: {
+            submitButtonText: 'Опубликовать Статью',
+            title: 'Заголовок статьи',
+            description: 'О чем будет статья?',
+            body: 'Напишите вашу статью (markdown будет поддерживаться)',
+            tag: 'Введите название тега и нажмите \'Enter\''
+        },
+        home: {
+            banner: {
+                logoTitle: 'Проводник',
+                logoText: 'Место, где вы можете делиться своими знаниями.'
+            },
+            feed: {
+                yourFeed: 'Ваша лента',
+                globalFeed: 'Общая лента'
+            },
+            tags: {
+                load: 'Загрузка тегов...',
+                popularTags: 'Популярные теги'
+            }
+        },
+        header: {
+            logoTitle: 'проводник',
+            login: 'Войти',
+            register: 'Зарегистрироваться',
+            newArticle: 'Новая статья',
+            settings: 'Настройки',
+            homePage: 'Главная'
+        },
+        profile: {
+            myArticles: 'Мои статьи',
+            favoritedArticles: 'Понравившееся статьи'
         }
     }
 });

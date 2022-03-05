@@ -1,3 +1,4 @@
+import React from 'react';
 import {act, fireEvent, render, screen} from '@testing-library/react';
 import {MemoryRouter, Route} from 'react-router-dom';
 import {
@@ -63,11 +64,11 @@ const defaultComment: Comment = {
 async function renderWithPath(slug: string) {
   await act(async () => {
     render(
-      <MemoryRouter initialEntries={[`/${slug}`]}>
-        <Route path='/:slug'>
-          <ArticlePage />
-        </Route>
-      </MemoryRouter>
+        <MemoryRouter initialEntries={[`/${slug}`]}>
+          <Route path='/:slug'>
+            <ArticlePage />
+          </Route>
+        </MemoryRouter>
     );
   });
 }
@@ -174,13 +175,13 @@ describe('For non article owner User', () => {
   beforeEach(async () => {
     await act(async () => {
       store.dispatch(
-        loadUser({
-          email: 'jake@jake.jake',
-          token: 'jwt.token.here',
-          username: 'jake2',
-          bio: 'I work at statefarm',
-          image: null,
-        })
+          loadUser({
+            email: 'jake@jake.jake',
+            token: 'jwt.token.here',
+            username: 'jake2',
+            bio: 'I work at statefarm',
+            image: null,
+          })
       );
     });
   });
@@ -336,13 +337,13 @@ describe('For article owner User', () => {
   beforeEach(async () => {
     await act(async () => {
       store.dispatch(
-        loadUser({
-          email: 'jake@jake.jake',
-          token: 'jwt.token.here',
-          username: 'jake3',
-          bio: 'I work at statefarm',
-          image: null,
-        })
+          loadUser({
+            email: 'jake@jake.jake',
+            token: 'jwt.token.here',
+            username: 'jake3',
+            bio: 'I work at statefarm',
+            image: null,
+          })
       );
     });
   });
