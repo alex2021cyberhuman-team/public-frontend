@@ -26,7 +26,8 @@ export function ArticleEditor({onSubmit}: { onSubmit: (ev: React.FormEvent) => v
                         fields={[
                             buildGenericFormField({
                                 name: 'title',
-                                placeholder: localizedStrings.articleEditor.title}),
+                                placeholder: localizedStrings.articleEditor.title
+                            }),
                             buildGenericFormField({
                                 name: 'description',
                                 placeholder: localizedStrings.articleEditor.description,

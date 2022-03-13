@@ -1,18 +1,18 @@
 import React from 'react';
+import { render } from 'react-dom';
+import localizedStrings from "../../services/localization";
 
 export function Footer() {
-  return (
-      <footer>
-        <div className='container'>
-          <a href='/#/' className='logo-font'>
-            conduit
-          </a>
-          <span className='attribution'>
-          An interactive learning project from <a
-              href='https://thinkster.io'>Thinkster</a>. Code &amp; design licensed
-          under MIT.
-        </span>
-        </div>
-      </footer>
-  );
+    return (
+        <footer>
+            <div className='container'>
+                <a href='/#/' className='logo-font'>
+                    {localizedStrings.footer.logo}
+                </a>
+                <span className='attribution'>
+                     {localizedStrings.formatString(localizedStrings.footer.attribution,(<a href='https://github.com/alex2021cyberhuman-team'>alex2021cyberhuman-team</a>))}
+                </span>
+            </div>
+        </footer>
+    );
 }

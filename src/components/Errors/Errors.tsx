@@ -1,16 +1,13 @@
 import React from 'react';
-import {GenericErrors} from '../../types/error';
 
-export function Errors({errors}: { errors: GenericErrors }) {
+export function Errors({errors}: { errors: string[] }) {
     return (
         <ul className='error-messages'>
-            {Object.entries(errors).map(([field, fieldErrors]) =>
-                fieldErrors.map((fieldError) => (
-                    <li key={field + fieldError}>
-                        {field} {fieldError}
-                    </li>
-                ))
-      )}
-    </ul>
-  );
+            {errors.map((error, index) =>
+                <li key={`error-${index}`}>
+                    {error}
+                </li>
+            )}
+        </ul>
+    );
 }

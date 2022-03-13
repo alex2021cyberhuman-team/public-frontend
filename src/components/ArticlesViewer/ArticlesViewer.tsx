@@ -6,11 +6,8 @@ import {Article} from '../../types/article';
 import {classObjectToClassName} from '../../types/style';
 import {ArticlePreview} from '../ArticlePreview/ArticlePreview';
 import {Pagination} from '../Pagination/Pagination';
-import {
-    ArticleViewerState,
-    endSubmittingFavorite,
-    startSubmittingFavorite
-} from './ArticlesViewer.slice';
+import {ArticleViewerState, endSubmittingFavorite, startSubmittingFavorite} from './ArticlesViewer.slice';
+import localizedStrings from "../../services/localization";
 
 export function ArticlesViewer({
                                    toggleClassName,
@@ -27,15 +24,15 @@ export function ArticlesViewer({
     onPageChange?: (index: number) => void;
     onTabChange?: (tab: string) => void;
 }) {
-  const { articles, articlesCount, currentPage } = useStore(({ articleViewer }) => articleViewer);
+    const {articles, articlesCount, currentPage} = useStore(({articleViewer}) => articleViewer);
 
-  return (
-    <Fragment>
-        <ArticlesTabSet {...{tabs, selectedTab, tabsTranslation, toggleClassName, onTabChange}} />
-        <ArticleList articles={articles}/>
-      <Pagination currentPage={currentPage} count={articlesCount} itemsPerPage={10} onPageChange={onPageChange} />
-    </Fragment>
-  );
+    return (
+        <Fragment>
+            <ArticlesTabSet {...{tabs, selectedTab, tabsTranslation, toggleClassName, onTabChange}} />
+            <ArticleList articles={articles}/>
+            <Pagination currentPage={currentPage} count={articlesCount} itemsPerPage={10} onPageChange={onPageChange}/>
+        </Fragment>
+    );
 }
 
 function ArticlesTabSet({
@@ -51,16 +48,16 @@ function ArticlesTabSet({
     tabsTranslation: Map<string, string>;
     onTabChange?: (tab: string) => void;
 }) {
-  return (
-    <div className={toggleClassName}>
-      <ul className='nav nav-pills outline-active'>
-        {tabs.map((tab) => (
-            <Tab key={tab} tab={tab} tabName={tabsTranslation.get(tab)} active={tab === selectedTab}
-                 onClick={() => onTabChange && onTabChange(tab)}/>
-        ))}
-      </ul>
-    </div>
-  );
+    return (
+        <div className={toggleClassName}>
+            <ul className='nav nav-pills outline-active'>
+                {tabs.map((tab) => (
+                    <Tab key={tab} tab={tab} tabName={tabsTranslation.get(tab)} active={tab === selectedTab}
+                         onClick={() => onTabChange && onTabChange(tab)}/>
+                ))}
+            </ul>
+        </div>
+    );
 }
 
 function Tab({
@@ -80,47 +77,47 @@ function Tab({
                 }}
             >
                 {tabName || tab}
-      </a>
-    </li>
-  );
+            </a>
+        </li>
+    );
 }
 
-function ArticleList({ articles }: { articles: ArticleViewerState['articles'] }) {
-  return articles.match({
-    none: () => (
-      <div className='article-preview' key={1}>
-        Loading articles...
-      </div>
-    ),
-    some: (articles) => (
-      <Fragment>
-        {articles.length === 0 && (
-          <div className='article-preview' key={1}>
-            No articles are here... yet.
-          </div>
-        )}
-        {articles.map(({ article, isSubmitting }, index) => (
-          <ArticlePreview
-            key={article.slug}
-            article={article}
-            isSubmitting={isSubmitting}
-            onFavoriteToggle={isSubmitting ? undefined : onFavoriteToggle(index, article)}
-          />
-        ))}
-      </Fragment>
-    ),
-  });
+function ArticleList({articles}: { articles: ArticleViewerState['articles'] }) {
+    return articles.match({
+        none: () => (
+            <div className='article-preview' key={1}>
+                {localizedStrings.viewer.loading}
+            </div>
+        ),
+        some: (articles) => (
+            <Fragment>
+                {articles.length === 0 && (
+                    <div className='article-preview' key={1}>
+                        {localizedStrings.viewer.notArticles}
+                    </div>
+                )}
+                {articles.map(({article, isSubmitting}, index) => (
+                    <ArticlePreview
+                        key={article.slug}
+                        article={article}
+                        isSubmitting={isSubmitting}
+                        onFavoriteToggle={isSubmitting ? undefined : onFavoriteToggle(index, article)}
+                    />
+                ))}
+            </Fragment>
+        ),
+    });
 }
 
-function onFavoriteToggle(index: number, { slug, favorited }: Article) {
-  return async () => {
-    if (store.getState().app.user.isNone()) {
-      location.hash = '#/login';
-      return;
-    }
-    store.dispatch(startSubmittingFavorite(index));
+function onFavoriteToggle(index: number, {slug, favorited}: Article) {
+    return async () => {
+        if (store.getState().app.user.isNone()) {
+            location.hash = '#/login';
+            return;
+        }
+        store.dispatch(startSubmittingFavorite(index));
 
-    await (favorited ? unfavoriteArticle(slug) : favoriteArticle(slug));
-    store.dispatch(endSubmittingFavorite({ index, favorited: !favorited }));
-  };
+        await (favorited ? unfavoriteArticle(slug) : favoriteArticle(slug));
+        store.dispatch(endSubmittingFavorite({index, favorited: favorited}));
+    };
 }

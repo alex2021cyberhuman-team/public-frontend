@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {HashRouter, NavLink} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {useStore} from '../../state/storeHooks';
 import {User} from '../../types/user';
 import localizedStrings, {languagesTranslates} from "../../services/localization";
@@ -20,14 +20,12 @@ export function Header() {
                     <Languages/>
                 </ul>
                 <ul className='nav navbar-nav pull-xs-right'>
-                    <HashRouter>
-                        <NavItem text={localizedStrings.header.homePage} href='/'/>
+                    <NavItem text={localizedStrings.header.homePage} href='/'/>
 
-                        {user.match({
-                            none: () => <GuestLinks/>,
-                            some: (user) => <UserLinks user={user}/>
-                        })}
-                    </HashRouter>
+                    {user.match({
+                        none: () => <GuestLinks/>,
+                        some: (user) => <UserLinks user={user}/>
+                    })}
                 </ul>
             </div>
         </nav>
@@ -37,7 +35,9 @@ export function Header() {
 function NavItem({text, href, icon}: { text: string; href: string; icon?: string }) {
     return (
         <li className='nav-item'>
-            <NavLink exact to={href} activeClassName='active' className='nav-link'>
+            <NavLink to={href} className={({isActive}) =>
+                isActive ? 'active nav-link' : 'nav-link'
+            }>
                 {icon && <i className={icon}></i>}&nbsp;{text}
             </NavLink>
         </li>

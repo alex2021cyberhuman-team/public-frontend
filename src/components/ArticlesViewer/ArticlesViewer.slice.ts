@@ -45,7 +45,7 @@ const slice = createSlice({
                 R.adjust(index, R.evolve({
                     article: {
                         favorited: R.not,
-                        favoritesCount: R.ifElse(R.always(favorited), R.inc, R.dec)
+                        favoritesCount: R.ifElse(R.always(favorited), R.dec, R.inc)
                     },
                     isSubmitting: R.F
                 })));

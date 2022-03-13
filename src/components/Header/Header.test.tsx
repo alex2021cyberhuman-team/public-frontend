@@ -14,20 +14,20 @@ describe('Header for guest', () => {
         act(() => {
             store.dispatch(changeLanguage('en'));
             store.dispatch(initializeApp);
+        });
     });
-  });
 
-  beforeEach(() => {
-    render(<Header />);
-  });
+    beforeEach(() => {
+        render(<Header/>);
+    });
 
-  it('Should render Sign in link', () => {
-    expectLinkByText('Sign in', 'login');
-  });
+    it('Should render Sign in link', () => {
+        expectLinkByText('Sign in', 'login');
+    });
 
-  it('Should render Sign up link', () => {
-    expectLinkByText('Sign up', 'register');
-  });
+    it('Should render Sign up link', () => {
+        expectLinkByText('Sign up', 'register');
+    });
 
     it('Should not render New Article link', () => {
         expectEmptyQueryByText('New Article');
@@ -118,39 +118,39 @@ describe('Header for user', () => {
                     image: null,
                 })
             );
+        });
     });
-  });
 
-  beforeEach(() => render(<Header />));
+    beforeEach(() => render(<Header/>));
 
-  it('Should render New Article link', () => {
-    expectLinkByText('New Article', 'editor');
-  });
+    it('Should render New Article link', () => {
+        expectLinkByText('New Article', 'editor');
+    });
 
-  it('Should render Settings link', () => {
-    expectLinkByText('Settings', 'settings');
-  });
+    it('Should render Settings link', () => {
+        expectLinkByText('Settings', 'settings');
+    });
 
-  it('Should render user link', () => {
-    expectLinkByText('jake', 'profile/jake');
-  });
+    it('Should render user link', () => {
+        expectLinkByText('jake', 'profile/jake');
+    });
 
-  it('Should not render Sign in link', () => {
-    expectEmptyQueryByText('Sign in');
-  });
+    it('Should not render Sign in link', () => {
+        expectEmptyQueryByText('Sign in');
+    });
 
-  it('Should not render Sign up link', () => {
-    expectEmptyQueryByText('Sign up');
-  });
+    it('Should not render Sign up link', () => {
+        expectEmptyQueryByText('Sign up');
+    });
 });
 
 function expectLinkByText(text: string, href: string) {
-  const link = screen.getByText(text);
-  expect(link).toBeInTheDocument();
-  expect(link.nodeName).toMatch('A');
-  expect(link.getAttribute('href')).toMatch('#/' + href);
+    const link = screen.getByText(text);
+    expect(link).toBeInTheDocument();
+    expect(link.nodeName).toMatch('A');
+    expect(link.getAttribute('href')).toMatch('#/' + href);
 }
 
 function expectEmptyQueryByText(text: string) {
-  expect(screen.queryAllByText(text)).toHaveLength(0);
+    expect(screen.queryAllByText(text)).toHaveLength(0);
 }
