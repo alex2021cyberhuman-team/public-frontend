@@ -1,6 +1,6 @@
 import LocalizedStrings from 'react-localization';
 import {format} from "date-fns";
-import {ru, enGB} from 'date-fns/locale';
+import {enGB, ru} from 'date-fns/locale';
 
 const localizedStrings = new LocalizedStrings({
     en: {
@@ -199,8 +199,8 @@ export const languagesTranslates = new Map<string, string>([
 ]);
 
 const dateFnsLocales = new Map<string, Locale>([
-   ['ru', ru],
-   ['en', enGB] 
+    ['ru', ru],
+    ['en', enGB]
 ]);
 
 export function getLocalDate(date: Date) {

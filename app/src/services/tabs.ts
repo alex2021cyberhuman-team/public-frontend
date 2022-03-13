@@ -10,7 +10,7 @@ const tabs = {
     yourFeedTab,
     favoritedArticlesTab,
     myArticlesTab
-}
+};
 
 export function getHomePageTabs() {
     return new Map<string, string>([

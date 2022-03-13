@@ -8,8 +8,7 @@ export interface TokenData {
 }
 
 export function getAccessTokenExpire(token?: string | undefined | null) {
-    if (!token)
-    {
+    if (!token) {
         return undefined;
     }
 
@@ -18,6 +17,6 @@ export function getAccessTokenExpire(token?: string | undefined | null) {
         const expireAtSeconds = decodedTokenData.exp;
         return new Date(expireAtSeconds * 1000);
     } catch (e) {
-        return  undefined;
+        return undefined;
     }
 }

@@ -23,8 +23,8 @@ export function loadUserIntoApp(user: User) {
     localStorage.setItem('token', user.token);
     axios.defaults.headers.common.Authorization = `Token ${user.token}`;
     user.accessTokenExpireTime = getAccessTokenExpire(user.token);
-    if (user.accessTokenExpireTime){
-        scheduleRefreshToken(user);        
+    if (user.accessTokenExpireTime) {
+        scheduleRefreshToken(user);
     }
     // TODO: MOBX store.dispatch(loadUser(user));
 }

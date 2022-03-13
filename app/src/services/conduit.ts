@@ -1,6 +1,6 @@
 import {Err, Ok, Result} from '@hqoss/monads';
-import axios, {AxiosError} from "axios";
-import { scheduleJob } from "node-schedule";
+import axios from "axios";
+import {scheduleJob} from "node-schedule";
 import settings from "../config/settings";
 import localization from "./localization";
 import {loadUserIntoApp, logout, User, userDecoder} from "../types/users/user";
@@ -13,18 +13,19 @@ import {UserSettings} from "../types/users/userSettings";
 import {UserForRegistration} from "../types/users/userForRegistration";
 import {Article, articleDecoder} from "../types/articles/article";
 import {ArticleForEditor} from "../types/articles/articleForEditor";
-import {profileDecoder, Profile} from "../types/users/profile";
+import {Profile, profileDecoder} from "../types/users/profile";
 import {FeedFilters} from "../types/articles/feedFilters";
-import {commentsDecoder, Comment, commentDecoder} from "../types/comments/comment";
+import {Comment, commentDecoder, commentsDecoder} from "../types/comments/comment";
 import {ResErr} from "@hqoss/monads/dist/lib/result/result";
 
 axios.defaults.baseURL = settings.baseApiUrl;
 const VALIDATION_ERROR_STATUS = 422;
-function catchUnprocessableEntity<T>(exception: any): ResErr<T, GenericErrors>{
+
+function catchUnprocessableEntity<T>(exception: any): ResErr<T, GenericErrors> {
     if (exception &&
         axios.isAxiosError(exception) &&
         exception.response &&
-        exception.response?.status == VALIDATION_ERROR_STATUS){
+        exception.response?.status == VALIDATION_ERROR_STATUS) {
         const genericErrors = genericErrorsDecoder.verify(exception.response.data.errors);
         return Err(genericErrors);
     }
@@ -37,7 +38,7 @@ axios.interceptors.request.use((request) => {
         request.headers['Accept-Language'] = languageCode;
     }
     return request;
-})
+});
 
 export function scheduleRefreshToken(user: User) {
     const now = new Date();
