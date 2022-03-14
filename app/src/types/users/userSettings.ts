@@ -1,4 +1,4 @@
-﻿import {PublicUser} from "./publicUser";
+import {PublicUser} from "./publicUser";
 
 export interface UserSettings extends PublicUser {
     email: string;

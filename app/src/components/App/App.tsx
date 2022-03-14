@@ -1,25 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {BrowserRouter, RouteObject} from "react-router-dom";
+import {Layout} from "../Layout/Layout";
+import {None} from "@hqoss/monads";
+import {getOrReloadLanguage} from "../../services/localization";
 
 function App() {
+    let routes: RouteObject[] = [
+        {
+            path: '/', element: <h1>Hello world</h1>, index: true
+        },
+        {
+            path: '/react', element: <h1>Hello react</h1>
+        }
+    ];
+    getOrReloadLanguage();
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
+        <BrowserRouter>
+            <Layout routes={routes} user={None} loading={false}/>
+        </BrowserRouter>
     );
 }
 

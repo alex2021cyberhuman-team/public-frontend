@@ -1,4 +1,4 @@
-﻿import {Article, articleDecoder} from "./article";
+import {Article, articleDecoder} from "./article";
 import {array, Decoder, number, object} from "decoders";
 
 export interface MultipleArticles {

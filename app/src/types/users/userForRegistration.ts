@@ -1,4 +1,4 @@
-﻿export interface UserForRegistration {
+export interface UserForRegistration {
     username: string;
     email: string;
     password: string;

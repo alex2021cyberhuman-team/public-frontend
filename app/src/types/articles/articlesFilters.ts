@@ -1,4 +1,4 @@
-﻿export interface ArticlesFilters {
+export interface ArticlesFilters {
     tag?: string;
     author?: string;
     favorited?: string;

@@ -4,6 +4,8 @@ import {PublicUser} from "./publicUser";
 import {getAccessTokenExpire} from "./tokenData";
 import {scheduleRefreshToken} from "../../services/conduit";
 
+export const LOCALSTORAGE_TOKEN = 'token';
+
 export interface User extends PublicUser {
     email: string;
     token: string;
@@ -20,7 +22,7 @@ export const userDecoder: Decoder<User> = object({
 });
 
 export function loadUserIntoApp(user: User) {
-    localStorage.setItem('token', user.token);
+    localStorage.setItem(LOCALSTORAGE_TOKEN, user.token);
     axios.defaults.headers.common.Authorization = `Token ${user.token}`;
     user.accessTokenExpireTime = getAccessTokenExpire(user.token);
     if (user.accessTokenExpireTime) {
@@ -30,7 +32,9 @@ export function loadUserIntoApp(user: User) {
 }
 
 export function logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem(LOCALSTORAGE_TOKEN);
     axios.defaults.headers.common.Authorization = '';
     // TODO: MOBX store.dispatch(logout(user));
 }
+
+

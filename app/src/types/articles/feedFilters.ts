@@ -1,4 +1,4 @@
-﻿export interface FeedFilters {
+export interface FeedFilters {
     limit?: number;
     offset?: number;
 }

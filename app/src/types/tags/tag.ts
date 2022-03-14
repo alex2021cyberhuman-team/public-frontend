@@ -1,4 +1,4 @@
-﻿import {array, object, string} from "decoders";
+import {array, object, string} from "decoders";
 
 export type Tag = string;
 

@@ -1,4 +1,4 @@
-﻿export interface ArticleForEditor {
+export interface ArticleForEditor {
     title: string;
     description: string;
     body: string;

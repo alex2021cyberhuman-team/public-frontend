@@ -193,6 +193,8 @@ const localizedStrings = new LocalizedStrings({
     }
 });
 
+export const LOCALSTORAGE_LANGUAGE = 'language';
+
 export const languagesTranslates = new Map<string, string>([
     ['en', 'English'],
     ['ru', 'Русский']
@@ -207,6 +209,28 @@ export function getLocalDate(date: Date) {
     const newDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
     const locale = dateFnsLocales.get(localizedStrings.getLanguage());
     return format(newDate, 'PPPP', {locale: locale})
+}
+
+export function setAndSaveLanguage(newLanguage: string) {
+    const current = localizedStrings.getLanguage();
+    if (newLanguage !== current) {
+        // TODO MOBX store.dispatch(changeLanguage(newLanguage));
+        localizedStrings.setLanguage(newLanguage);
+        localStorage.setItem(LOCALSTORAGE_LANGUAGE, newLanguage);
+    }
+}
+
+export function getOrReloadLanguage() {
+    const language = localStorage.getItem(LOCALSTORAGE_LANGUAGE);
+    if (language) {
+        localizedStrings.setLanguage(language);
+        return language;
+    } else {
+        const language = localizedStrings.getLanguage();
+        localStorage.setItem(LOCALSTORAGE_LANGUAGE, language);
+        return language;
+    }
+    // TODO MOBX store.dispatch(changeLanguage(newLanguage));
 }
 
 export default localizedStrings;
