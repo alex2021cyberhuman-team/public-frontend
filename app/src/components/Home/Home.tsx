@@ -11,7 +11,7 @@ function Home() {
     const store = globalStore.home;
     useEffect(() => {
         store.onLoadArticlesAsync()
-    }, []);
+    }, [store]);
 
     return (
         <div className='home-page'>
@@ -28,6 +28,7 @@ function Home() {
                         articles={store.articles}
                         articlesCount={store.articlesCount}
                         currentPage={store.currentPage} 
+                        favoriteDisabled={store.favoriteDisabled}
                         onFavoriteToggleAsync={store.onFavoriteToggledAsync}/>
                 </div>
 

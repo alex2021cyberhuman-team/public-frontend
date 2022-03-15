@@ -6,7 +6,17 @@ import { Pagination } from "../Pagination/Pagination";
 import { Option } from "@hqoss/monads";
 
 export function ArticlesViewer({
-    toggleClassName, tabs, tabsTranslation, selectedTab, articles, articlesCount, currentPage, onPageChange, onTabChange, onFavoriteToggleAsync
+    toggleClassName, 
+    tabs, 
+    tabsTranslation, 
+    selectedTab,
+    articles, 
+    articlesCount,
+    currentPage,
+    favoriteDisabled,
+    onPageChange,
+    onTabChange,
+    onFavoriteToggleAsync
 }: {
     toggleClassName: string;
     tabs: string[];
@@ -18,11 +28,12 @@ export function ArticlesViewer({
     articles: Option<Article[]>,
     articlesCount: number;
     currentPage: number;
+    favoriteDisabled: boolean;
 }) {
     return (
         <Fragment>
             <ArticlesTabSet tabs={tabs} selectedTab={selectedTab} tabsTranslation={tabsTranslation} toggleClassName={toggleClassName} onTabChange={onTabChange} />
-            <ArticleList articles={articles} onFavoriteToggleAsync={onFavoriteToggleAsync} />
+            <ArticleList articles={articles} onFavoriteToggleAsync={onFavoriteToggleAsync} favoriteDisabled={favoriteDisabled}/>
             <Pagination currentPage={currentPage} count={articlesCount} itemsPerPage={10} onPageChange={onPageChange} />
         </Fragment>
     );

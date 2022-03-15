@@ -1,6 +1,8 @@
 import LocalizedStrings from 'react-localization';
-import {format} from "date-fns";
-import {enGB, ru} from 'date-fns/locale';
+import { format } from "date-fns";
+import { enGB, ru } from 'date-fns/locale';
+import { globalState } from 'mobx/dist/internal';
+import { globalStore } from '../store/globalStore';
 
 const localizedStrings = new LocalizedStrings({
     en: {
@@ -208,29 +210,34 @@ const dateFnsLocales = new Map<string, Locale>([
 export function getLocalDate(date: Date) {
     const newDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
     const locale = dateFnsLocales.get(localizedStrings.getLanguage());
-    return format(newDate, 'PPPP', {locale: locale})
+    return format(newDate, 'PPPP', { locale: locale })
 }
 
 export function setAndSaveLanguage(newLanguage: string) {
-    const current = localizedStrings.getLanguage();
-    if (newLanguage !== current) {
-        // TODO MOBX store.dispatch(changeLanguage(newLanguage));
-        localizedStrings.setLanguage(newLanguage);
-        localStorage.setItem(LOCALSTORAGE_LANGUAGE, newLanguage);
-    }
+    globalStore.app.language = newLanguage;
+    localizedStrings.setLanguage(newLanguage);
+    localStorage.setItem(LOCALSTORAGE_LANGUAGE, newLanguage);
 }
 
 export function getOrReloadLanguage() {
-    const language = localStorage.getItem(LOCALSTORAGE_LANGUAGE);
+    let language = globalStore.app.language;
     if (language) {
-        localizedStrings.setLanguage(language);
-        return language;
-    } else {
-        const language = localizedStrings.getLanguage();
-        localStorage.setItem(LOCALSTORAGE_LANGUAGE, language);
         return language;
     }
-    // TODO MOBX store.dispatch(changeLanguage(newLanguage));
+
+    const localLanguage = localStorage.getItem(LOCALSTORAGE_LANGUAGE) as Language | null;
+    if (!localLanguage) {
+        language = localizedStrings.getLanguage();
+    }
+    else {
+        language = localLanguage;
+    }
+
+    setAndSaveLanguage(language);
+    
+    return language;
 }
+
+export type Language = string;
 
 export default localizedStrings;

@@ -1,32 +1,35 @@
 import React from 'react';
-import {format} from 'date-fns';
-import {Link} from 'react-router-dom';
+import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
 import localizedStrings from "../../services/localization";
 import { TagList } from '../TagList/TagList';
 import { Article } from '../../types/articles/article';
+import { ArticleViewModel } from '../ArticleList/ArticleList';
 export function ArticlePreview({
-                                   article: {
-                                       createdAt,
-                                       favorited,
-                                       favoritesCount,
-                                       slug,
-                                       title,
-                                       description,
-                                       tagList,
-                                       author: {image, username},
-                                   },
-                                   isSubmitting,
-                                   onFavoriteToggle,
-                               }: {
+    article: {
+        createdAt,
+        favorited,
+        favoritesCount,
+        slug,
+        title,
+        description,
+        tagList,
+        author: { image, username },
+    },
+    isSubmitting,
+    favoriteDisabled,
+    onFavoriteToggle,
+}: {
     article: Article;
     isSubmitting: boolean;
-    onFavoriteToggle?: () => void;
+    onFavoriteToggle: () => void;
+    favoriteDisabled: boolean;
 }) {
     return (
         <div className='article-preview'>
             <div className='article-meta'>
                 <Link to={`/profile/${username}`} className='author'>
-                    <img src={image || undefined}/>
+                    <img src={image || undefined} />
                 </Link>
                 <div className='info'>
                     <Link to={`/profile/${username}`} className='author'>
@@ -37,8 +40,8 @@ export function ArticlePreview({
                 <button
                     className={`btn btn-sm pull-xs-right ${favorited ? 'btn-primary' : 'btn-outline-primary'}`}
                     aria-label={localizedStrings.article.toggleFavorited}
-                    disabled={isSubmitting}
-                    onClick={onFavoriteToggle}
+                    disabled={isSubmitting || favoriteDisabled}
+                    onClick={() => onFavoriteToggle()}
                 >
                     <i className='ion-heart'></i> {favoritesCount}
                 </button>
@@ -47,7 +50,7 @@ export function ArticlePreview({
                 <h1>{title}</h1>
                 <p>{description}</p>
                 <span>{localizedStrings.article.readMore}</span>
-                <TagList tagList={tagList}/>
+                <TagList tagList={tagList} />
             </a>
         </div>
     );

@@ -2,7 +2,7 @@ import {Err, Ok, Result} from '@hqoss/monads';
 import axios from "axios";
 import {scheduleJob} from "node-schedule";
 import settings from "../config/settings";
-import localization from "./localization";
+import localization, { getOrReloadLanguage } from "./localization";
 import {loadUserIntoApp, logout, User, userDecoder} from "../types/users/user";
 import {ArticlesFilters} from "../types/articles/articlesFilters";
 import {MultipleArticles, multipleArticlesDecoder} from "../types/articles/multipleArticles";
@@ -20,6 +20,7 @@ import {ResErr} from "@hqoss/monads/dist/lib/result/result";
 
 axios.defaults.baseURL = settings.baseApiUrl;
 const VALIDATION_ERROR_STATUS = 422;
+export const ARTICLES_DEFAULT_LIMIT = 10;
 
 function catchUnprocessableEntity<T>(exception: any): ResErr<T, GenericErrors> {
     if (exception &&
@@ -33,7 +34,7 @@ function catchUnprocessableEntity<T>(exception: any): ResErr<T, GenericErrors> {
 }
 
 axios.interceptors.request.use((request) => {
-    const languageCode = localization.getLanguage();
+    const languageCode = getOrReloadLanguage();
     if (request && request.headers) {
         request.headers['Accept-Language'] = languageCode;
     }
@@ -56,7 +57,7 @@ export function refreshToken() {
 
 export async function getArticles(filters: ArticlesFilters = {}): Promise<MultipleArticles> {
     const finalFilters: ArticlesFilters = {
-        limit: 10,
+        limit: ARTICLES_DEFAULT_LIMIT,
         offset: 0,
         ...filters,
     };
