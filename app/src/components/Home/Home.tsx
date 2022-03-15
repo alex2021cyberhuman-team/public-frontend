@@ -6,8 +6,10 @@ import { observer } from 'mobx-react-lite';
 import { ArticlesViewer } from '../ArticlesViewer/ArticlesViewer';
 import { HomeSidebar } from './HomeSidebar';
 import { globalStore } from '../../store/globalStore';
+import { getOrReloadStateLanguage } from "../../services/getOrReloadLanguage";
 
-function Home() {
+export default observer(() => {
+    getOrReloadStateLanguage();
     const store = globalStore.home;
     useEffect(() => {
         store.onLoadArticlesAsync()
@@ -15,7 +17,7 @@ function Home() {
 
     return (
         <div className='home-page'>
-            <Banner/>
+            <Banner />
             <ContainerPage>
                 <div className='col-md-9'>
                     <ArticlesViewer
@@ -27,17 +29,15 @@ function Home() {
                         onTabChange={store.onTabChange}
                         articles={store.articles}
                         articlesCount={store.articlesCount}
-                        currentPage={store.currentPage} 
+                        currentPage={store.currentPage}
                         favoriteDisabled={store.favoriteDisabled}
-                        onFavoriteToggleAsync={store.onFavoriteToggledAsync}/>
+                        onFavoriteToggleAsync={store.onFavoriteToggledAsync} />
                 </div>
 
                 <div className='col-md-3'>
-                    <HomeSidebar tags={store.tags} onTagChange={store.onTagChange}/>
+                    <HomeSidebar tags={store.tags} onTagChange={store.onTagChange} />
                 </div>
             </ContainerPage>
         </div>
     );
-}
-
-export default observer(Home);
+});

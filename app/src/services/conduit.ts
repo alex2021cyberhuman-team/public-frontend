@@ -2,7 +2,7 @@ import {Err, Ok, Result} from '@hqoss/monads';
 import axios from "axios";
 import {scheduleJob} from "node-schedule";
 import settings from "../config/settings";
-import localization, { getOrReloadLanguage } from "./localization";
+import { getOrReloadStateLanguage } from "./getOrReloadLanguage";
 import {loadUserIntoApp, logout, User, userDecoder} from "../types/users/user";
 import {ArticlesFilters} from "../types/articles/articlesFilters";
 import {MultipleArticles, multipleArticlesDecoder} from "../types/articles/multipleArticles";
@@ -34,7 +34,7 @@ function catchUnprocessableEntity<T>(exception: any): ResErr<T, GenericErrors> {
 }
 
 axios.interceptors.request.use((request) => {
-    const languageCode = getOrReloadLanguage();
+    const languageCode = getOrReloadStateLanguage();
     if (request && request.headers) {
         request.headers['Accept-Language'] = languageCode;
     }

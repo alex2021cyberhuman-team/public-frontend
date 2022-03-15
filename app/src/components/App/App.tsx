@@ -1,29 +1,28 @@
-import React, { useEffect } from 'react';
-import {BrowserRouter, RouteObject} from "react-router-dom";
+import { useEffect } from 'react';
+import {Navigate, RouteObject, useRoutes} from "react-router-dom";
 import {Layout} from "../Layout/Layout";
-import {None} from "@hqoss/monads";
-import {getOrReloadLanguage} from "../../services/localization";
-import Home from '../Home/Home';
 import { globalStore } from '../../store/globalStore';
+import { observer } from 'mobx-react-lite';
+import Home from '../Home/Home';
 
-function App() {
-    let routes: RouteObject[] = [
+export default observer(() => {
+    const store = globalStore.app;
+    useEffect(() => {store.loadAsync()}, [store]);
+    console.count('App')
+    const element = useRoutes(getRoutes());
+    return element;
+});
+
+function getRoutes(){
+    let items: RouteObject[] = [
         {
-            path: '/', element: <Home/>, index: true
-        },
-        {
-            path: '/react', element: <h1>Hello react</h1>
+            path: "/",
+            element: (<Layout user={globalStore.app.user} loading={globalStore.app.isLoading} />),
+            children: [
+                {index: true, element: <Home/>},
+                {path: "*", element: (<Navigate to="/" />)}
+            ]
         }
     ];
-    getOrReloadLanguage();
-    const store = globalStore.app;
-
-    useEffect(() => {store.loadAsync()}, [store]);
-    return (
-        <BrowserRouter>
-            <Layout routes={routes} user={store.user} loading={store.isLoading}/>
-        </BrowserRouter>
-    );
+    return items;
 }
-
-export default App;

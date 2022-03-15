@@ -15,14 +15,10 @@ export function ArticleList({ articles, onFavoriteToggleAsync, favoriteDisabled 
     onFavoriteToggleAsync: (article: Article) => Promise<void>; 
     favoriteDisabled: boolean;
 }) {
-    const [articleModels, setArticlesModels] = useState<ArticleViewModel[]>([]);
-
-
-    if (articles.isSome()) {
-        const articleModelsFromProps = articles.unwrap().map(article => ({ article, isSubmitting: false }));
-        setArticlesModels(() => articleModelsFromProps);
-    }
-
+    const [articleModels, setArticlesModels] = useState<ArticleViewModel[]>(articles.match({
+        none: [],
+        some: () => articles.unwrap().map(article => ({ article, isSubmitting: false }))
+    }));
 
     return articles.match({
         none: () => (
@@ -31,7 +27,7 @@ export function ArticleList({ articles, onFavoriteToggleAsync, favoriteDisabled 
             </div>
         ),
         some: () => (
-            <ArticleListRender articles={articleModels} favoriteDisabled={favoriteDisabled} onFavoriteToggle={(index, model) => onFavoriteToggle(index, model, setArticlesModels, onFavoriteToggleAsync)} />
+            <ArticleListRender articles={articles.unwrap().map(article => ({ article, isSubmitting: false }))} favoriteDisabled={favoriteDisabled} onFavoriteToggle={(index, model) => onFavoriteToggle(index, model, setArticlesModels, onFavoriteToggleAsync)} />
         ),
     });
 }

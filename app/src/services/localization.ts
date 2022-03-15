@@ -1,10 +1,7 @@
 import LocalizedStrings from 'react-localization';
-import { format } from "date-fns";
 import { enGB, ru } from 'date-fns/locale';
-import { globalState } from 'mobx/dist/internal';
-import { globalStore } from '../store/globalStore';
 
-const localizedStrings = new LocalizedStrings({
+export const localizedStrings = new LocalizedStrings({
     en: {
         article: {
             favorite: 'Favorite Article',
@@ -202,42 +199,9 @@ export const languagesTranslates = new Map<string, string>([
     ['ru', 'Русский']
 ]);
 
-const dateFnsLocales = new Map<string, Locale>([
+export const dateFnsLocales = new Map<string, Locale>([
     ['ru', ru],
     ['en', enGB]
 ]);
-
-export function getLocalDate(date: Date) {
-    const newDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-    const locale = dateFnsLocales.get(localizedStrings.getLanguage());
-    return format(newDate, 'PPPP', { locale: locale })
-}
-
-export function setAndSaveLanguage(newLanguage: string) {
-    globalStore.app.language = newLanguage;
-    localizedStrings.setLanguage(newLanguage);
-    localStorage.setItem(LOCALSTORAGE_LANGUAGE, newLanguage);
-}
-
-export function getOrReloadLanguage() {
-    let language = globalStore.app.language;
-    if (language) {
-        return language;
-    }
-
-    const localLanguage = localStorage.getItem(LOCALSTORAGE_LANGUAGE) as Language | null;
-    if (!localLanguage) {
-        language = localizedStrings.getLanguage();
-    }
-    else {
-        language = localLanguage;
-    }
-
-    setAndSaveLanguage(language);
-    
-    return language;
-}
-
-export type Language = string;
 
 export default localizedStrings;

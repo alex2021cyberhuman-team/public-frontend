@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Article } from "../../types/articles/article";
 import { None, Option, Some } from "@hqoss/monads";
 import { Tag } from "../../types/tags/tag";
@@ -17,7 +17,7 @@ export default class HomeStore {
     selectedTag: Option<Tag> = None;
 
     constructor() {
-        makeAutoObservable(this)
+        makeAutoObservable(this);
     }
 
     get favoriteDisabled() {
@@ -25,8 +25,10 @@ export default class HomeStore {
     };
 
     async onLoadArticlesAsync() {
+        console.log('start home');
         this.selectTab();
         await this.realoadArticles();
+        console.log('end home');
     };
 
     onTabChange(tab: string) {
@@ -67,7 +69,7 @@ export default class HomeStore {
     }
 
     private determineTab(tab: string) {
-        if (globalStore.app.user.isSome() && tab == yourFeedTab) {
+        if (globalStore.app.user.isSome() && tab === yourFeedTab) {
             this.selectedTab = yourFeedTab;
         } else {
             this.selectedTab = globalFeedTab;
@@ -102,8 +104,8 @@ export default class HomeStore {
         }
         const loadArticlesPromise = getArticlesPromise
             .then((multiple) => {
-                this.articles = Some(multiple.articles);
-                this.articlesCount = multiple.articlesCount;
+                runInAction(() => this.articles = Some(multiple.articles));
+                runInAction(() => this.articlesCount = multiple.articlesCount);
             });
         return loadArticlesPromise;
     }
@@ -112,7 +114,7 @@ export default class HomeStore {
         const getTagsPromise = getTags();
         const loadTagsPromise = getTagsPromise
             .then((t) => t.tags)
-            .then((t) => { this.tags = Some(t); });
+            .then((t) => { runInAction(() => this.tags = Some(t)); });
         return loadTagsPromise;
     }
 }
