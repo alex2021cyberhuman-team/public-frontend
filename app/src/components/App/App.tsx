@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import {Navigate, RouteObject, useRoutes} from "react-router-dom";
-import {Layout} from "../Layout/Layout";
+import {Layout} from "../SharedComponents/Layout/Layout";
 import { globalStore } from '../../store/globalStore';
 import { observer } from 'mobx-react-lite';
-import Home from '../Home/Home';
+import Home from '../Pages/Home/Home';
 
 export default observer(() => {
     const store = globalStore.app;
