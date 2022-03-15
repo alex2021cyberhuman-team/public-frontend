@@ -3,11 +3,12 @@ import {BrowserRouter, RouteObject} from "react-router-dom";
 import {Layout} from "../Layout/Layout";
 import {None} from "@hqoss/monads";
 import {getOrReloadLanguage} from "../../services/localization";
+import Home from '../Home/Home';
 
 function App() {
     let routes: RouteObject[] = [
         {
-            path: '/', element: <h1>Hello world</h1>, index: true
+            path: '/', element: <Home/>, index: true
         },
         {
             path: '/react', element: <h1>Hello react</h1>
