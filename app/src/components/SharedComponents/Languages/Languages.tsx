@@ -1,36 +1,47 @@
-import {languagesTranslates} from "../../../services/localization";
-import { getOrReloadStateLanguage } from "../../../services/getOrReloadLanguage";
-import { setAndSaveLanguage } from "../../../services/setAndSaveLanguage";
-import React from "react";
+import { Fragment } from "react";
+import { classObjectToClassName } from "../../../types/infrastructure/style";
+import { Language } from "../../../services/localization/Language";
+import { languagesTranslates, useLocalization } from "../../../services/localization/reactLocalization";
+import { Navigate, NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { assignLangHref, NavItem } from "../NavItem/NavItem";
 
-export function Languages() {
-    let items = [];
-    const language = getOrReloadStateLanguage();
-    for (const code of languagesTranslates.keys()) {
-        const className = 'nav-link' + (language === code
-            ? ' active'
-            : '');
-        const itemCode = code;
-        items.push(
-            {
-                key: `language-${itemCode}`,
-                id: `set-language-${itemCode}`,
-                className: className,
-                text: languagesTranslates.get(itemCode),
-                code: itemCode
-            })
+export const LOCALSTORAGE_LANGUAGE_REDIRECT = 'languageRedirect';
+
+export function LanguageNavigate({ to: href }: { to: string }) {
+    const { language } = useLocalization();
+    const to = assignLangHref(language, true, href);
+    return (
+        <Navigate to={to} />
+    )
+}
+
+export function Languages({
+    currentLanguage
+}: {
+    currentLanguage: Language;
+    onChangeLanguage: (language: Language) => void
+}) {
+    const items = [...languagesTranslates];
+    const localiton = useLocation();
+    function getTargetPathForCode(code: string) {
+        let path = localiton.pathname;
+        path = path.replace(`/${currentLanguage}` as string, `/${code}` as string);
+        return path;
     }
 
     return (
-        <>
-            {items.map(item => (
-                (<li className='nav-item' key={item.key}>
-                    <a
-                        id={item.id}
-                        href="#0"
-                        className={item.className}
-                        onClick={() => setAndSaveLanguage(item.code)}>{item.text}</a>
-                </li>)))}
-        </>
+        <Fragment>
+            {items.map(([code, text]) =>
+                <NavItem
+                    key={code}
+                    text={text}
+                    href={getTargetPathForCode(code)}
+                    setLanguage={false}
+                />)}
+        </Fragment>
     )
+};
+
+function getLanguageButtonClass(language: string, code: string): string | undefined {
+    return classObjectToClassName({ active: language === code, 'nav-link': true /*, 'btn-link': true */ });
 }

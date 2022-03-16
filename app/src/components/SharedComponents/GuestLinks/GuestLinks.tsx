@@ -1,12 +1,13 @@
 import React, {Fragment} from "react";
-import localizedStrings from "../../../services/localization";
+import {useLocalization} from "../../../services/localization/reactLocalization";
 import {NavItem} from "../NavItem/NavItem";
 
-export function GuestLinks() {
+export function GuestLinks() {    
+    const {localization} = useLocalization();
     return (
         <Fragment>
-            <NavItem text={localizedStrings.header.login} href='/login'/>
-            <NavItem text={localizedStrings.header.register} href='/register'/>
+            <NavItem text={localization.header.login} href='/login'/>
+            <NavItem text={localization.header.register} href='/register'/>
         </Fragment>
     );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Article } from "../../../types/articles/article";
 import { Option } from "@hqoss/monads";
-import localizedStrings from "../../../services/localization";
+import {useLocalization} from "../../../services/localization/reactLocalization";
 import { onFavoriteToggle } from "./actions/onFavoriteToggle";
 import { ArticleListRender } from "../ArticleListRender/ArticleListRender";
 
@@ -11,23 +11,20 @@ export interface ArticleViewModel {
 }
 
 export function ArticleList({ articles, onFavoriteToggleAsync, favoriteDisabled }: { 
-    articles: Option<Article[]>; 
-    onFavoriteToggleAsync: (article: Article) => Promise<void>; 
+    articles: Option<ArticleViewModel[]>; 
+    onFavoriteToggleAsync: (index: number, model: ArticleViewModel) => Promise<void>; 
     favoriteDisabled: boolean;
 }) {
-    const [articleModels, setArticlesModels] = useState<ArticleViewModel[]>(articles.match({
-        none: [],
-        some: () => articles.unwrap().map(article => ({ article, isSubmitting: false }))
-    }));
+    const {localization} = useLocalization();
 
     return articles.match({
         none: () => (
             <div className='article-preview' key={1}>
-                {localizedStrings.viewer.loading}
+                {localization.viewer.loading}
             </div>
         ),
-        some: () => (
-            <ArticleListRender articles={articleModels} favoriteDisabled={favoriteDisabled} onFavoriteToggle={(index, model) => onFavoriteToggle(index, model, setArticlesModels, onFavoriteToggleAsync)} />
+        some: (ar) => (
+            <ArticleListRender articles={ar} favoriteDisabled={favoriteDisabled} onFavoriteToggle={(index, model) => onFavoriteToggleAsync(index, model)} />
         ),
     });
 }

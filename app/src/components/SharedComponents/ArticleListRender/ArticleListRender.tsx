@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import localizedStrings from "../../../services/localization";
+import {useLocalization} from "../../../services/localization/reactLocalization";
 import { ArticlePreview } from "../ArticlePreview/ArticlePreview";
 import { ArticleViewModel } from "../ArticleList/ArticleList";
 
@@ -8,10 +8,11 @@ export function ArticleListRender({ articles, onFavoriteToggle, favoriteDisabled
      onFavoriteToggle: (index: number, model: ArticleViewModel) => void; 
      favoriteDisabled: boolean;
 }) {
+    const {localization} = useLocalization();
     return <Fragment>
         {articles.length === 0 && (
             <div className='article-preview' key={1}>
-                {localizedStrings.viewer.notArticles}
+                {localization.viewer.notArticles}
             </div>
         )}
         {articles.map((model, index) => (

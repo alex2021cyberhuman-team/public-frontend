@@ -1,5 +1,4 @@
-import localizedStrings from "../../../services/localization";
-
+import { useLocalization } from "../../../services/localization/reactLocalization";
 
 export function Pagination({
     currentPage, count, itemsPerPage, onPageChange,
@@ -9,6 +8,7 @@ export function Pagination({
     itemsPerPage: number;
     onPageChange?: (index: number) => void;
 }) {
+    const {localization} = useLocalization();
     const pageCount = Math.ceil(count / itemsPerPage);
     const pageNumbers = [...new Array(pageCount)].map(x => x + 1);
     return (
@@ -21,9 +21,9 @@ export function Pagination({
                             className={`page-item${currentPage !== pageNumber ? '' : ' active'}`}
                             onClick={onPageChange && (() => onPageChange(pageNumber))}
                         >
-                            <a className='page-link' aria-label={localizedStrings.formatString(localizedStrings.pagination.goToPage, pageNumber).toString()} href='#'>
+                            <button className='page-link' aria-label={localization.formatString(localization.pagination.goToPage, pageNumber).toString()}>
                                 {pageNumber}
-                            </a>
+                            </button>
                         </li>
                     ))}
             </ul>

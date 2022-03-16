@@ -1,31 +1,33 @@
 import { makeAutoObservable } from "mobx";
 import { None, Option, Some } from "@hqoss/monads";
 import { User } from "../../types/users/user";
-import { Language } from "../../services/Language";
+import { tryReloadUserAsync } from "../../types/users/tokenData";
+import GlobalStore from "../../store/globalStore";
 
 export default class AppStore {
-    logout() {
-        this.user = None;
-    }
-    loadUser(user: User) {
-        this.user = Some(user);
-    }
     user: Option<User> = None;
-    language: Language = '';
     isLoading = true;
+    global: GlobalStore;
 
-    constructor() {
-        makeAutoObservable(this);
+    constructor(globalStore: GlobalStore) {
+        this.global = globalStore;
+        makeAutoObservable(this, { global: false });
     }
 
-    loadAsync() {
+    async loadAsync() {
         this.endLoad();
-        return Promise.resolve();
+        await tryReloadUserAsync();
     }
 
     endLoad() {
         this.isLoading = false;
     }
-}
 
-export const appStore = new AppStore();
+    logout() {
+        this.user = None;
+    }
+
+    loadUser(user: User) {
+        this.user = Some(user);
+    }
+}

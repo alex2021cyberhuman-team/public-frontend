@@ -1,20 +1,32 @@
 import React, { useEffect } from 'react';
 import Banner from '../../SharedComponents/Banner/Banner';
 import { ContainerPage } from '../../SharedComponents/ContainerPage/ContainerPage';
-import { getHomePageTabs } from './services/getHomePageTabs';
+import { getHomePageTabs, globalFeedTab } from './services/getHomePageTabs';
 import { observer } from 'mobx-react-lite';
 import { ArticlesViewer } from '../../SharedComponents/ArticlesViewer/ArticlesViewer';
 import { HomeSidebar } from './HomeSidebar';
-import { globalStore } from '../../../store/globalStore';
-import { getOrReloadStateLanguage } from "../../../services/getOrReloadLanguage";
+import GlobalStore from '../../../store/globalStore';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getLangHref } from '../../SharedComponents/NavItem/NavItem';
+import { useLocalization } from '../../../services/localization/reactLocalization';
+import { tab } from '@testing-library/user-event/dist/tab';
 
-export default observer(() => {
-    getOrReloadStateLanguage();
-    const store = globalStore.home;
+export default observer(function Home({
+    store
+}: {
+    store: GlobalStore;
+}) {
+    const { tag: tagParam, tab: tabParam } = useParams();
+    const navigate = useNavigate();
+    const tabs = getHomePageTabs();
+    const {language} = useLocalization();
     useEffect(() => {
-        store.onLoadArticlesAsync()
+        if (!store.home.checkParams(tagParam, tabParam)){
+            navigate(getLangHref(language, '/'))
+        } else {
+            store.home.onLoadArticlesAsync()
+        }
     }, [store]);
-
     return (
         <div className='home-page'>
             <Banner />
@@ -22,20 +34,20 @@ export default observer(() => {
                 <div className='col-md-9'>
                     <ArticlesViewer
                         toggleClassName='feed-toggle'
-                        tabsTranslation={getHomePageTabs()}
-                        selectedTab={store.selectedTab}
-                        tabs={store.tabs}
-                        onPageChange={store.onPageChange}
-                        onTabChange={store.onTabChange}
-                        articles={store.articles}
-                        articlesCount={store.articlesCount}
-                        currentPage={store.currentPage}
-                        favoriteDisabled={store.favoriteDisabled}
-                        onFavoriteToggleAsync={store.onFavoriteToggledAsync} />
+                        tabsTranslation={tabs}
+                        selectedTab={store.home.selectedTab}
+                        tabs={store.home.tabs}
+                        onPageChange={(index) => store.home.onPageChange(index)}
+                        onTabChange={(tab) => navigate(`/${tab}`)}
+                        articles={store.home.articles}
+                        articlesCount={store.home.articlesCount}
+                        currentPage={store.home.currentPage}
+                        favoriteDisabled={store.home.favoriteDisabled}
+                        onFavoriteToggleAsync={(index, model) => store.home.onFavoriteToggledAsync(index, model)} />
                 </div>
 
                 <div className='col-md-3'>
-                    <HomeSidebar tags={store.tags} onTagChange={store.onTagChange} />
+                    <HomeSidebar tags={store.home.tags} onTagChange={(tag) => navigate(getLangHref(language, `/${globalFeedTab}/${tag}`))} />
                 </div>
             </ContainerPage>
         </div>

@@ -1,0 +1,37 @@
+import { makeAutoObservable, runInAction } from "mobx";
+import GlobalStore from "../../store/globalStore";
+import { LOCALSTORAGE_LANGUAGE } from "./conf";
+import enStrings from "./enStrings";
+import { Language } from "./Language";
+import localizedStrings from "./localizedStringsInstance";
+import ruStrings from "./ruStrings";
+type LS = typeof enStrings;
+type LanguageEnum = 'ru' | 'en';
+class loocale {
+    localization: LS;
+    private stringMap: Map<string, LS>;
+    language: LanguageEnum = 'en';
+    allLanguages: LanguageEnum[] = ['ru', 'en'];
+    global: GlobalStore;
+
+    constructor(globalStore: GlobalStore) {
+        this.global = globalStore;
+        this.language = (localStorage.getItem(LOCALSTORAGE_LANGUAGE) || 'ru') as LanguageEnum;
+        this.localization = this.stringMap[this.language];
+        makeAutoObservable(this, { global: false });
+    }
+
+    setLanguage(newLanguage: LanguageEnum) {
+        runInAction(() => {
+            this.localization = this.stringMap[this.language];
+            localStorage.setItem(LOCALSTORAGE_LANGUAGE, newLanguage);
+            this.language = newLanguage;
+        })
+    }
+
+    onChangeLanguage(newLanguage: LanguageEnum) {
+        this.setLanguage(newLanguage);
+    }
+}
+
+export default loocale;

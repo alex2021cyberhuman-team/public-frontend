@@ -1,28 +1,12 @@
 import { useEffect } from 'react';
-import {Navigate, RouteObject, useRoutes} from "react-router-dom";
-import {Layout} from "../SharedComponents/Layout/Layout";
-import { globalStore } from '../../store/globalStore';
+import {useRoutes} from "react-router-dom";
+import GlobalStore from '../../store/globalStore';
 import { observer } from 'mobx-react-lite';
-import Home from '../Pages/Home/Home';
+import { getRoutes } from './services/getRoutes';
 
-export default observer(() => {
-    const store = globalStore.app;
-    useEffect(() => {store.loadAsync()}, [store]);
-    console.count('App')
-    const element = useRoutes(getRoutes());
+export default observer(({store}: {store: GlobalStore}) => {
+    useEffect(() => {store.app.loadAsync()}, [store]);
+    const element = useRoutes(getRoutes({store}));
     return element;
 });
 
-function getRoutes(){
-    let items: RouteObject[] = [
-        {
-            path: "/",
-            element: (<Layout user={globalStore.app.user} loading={globalStore.app.isLoading} />),
-            children: [
-                {index: true, element: <Home/>},
-                {path: "*", element: (<Navigate to="/" />)}
-            ]
-        }
-    ];
-    return items;
-}

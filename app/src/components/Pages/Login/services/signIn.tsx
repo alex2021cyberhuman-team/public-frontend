@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
-import { login } from "../../../../services/conduit";
+import { login } from "../../../../services/conduitApi/login";
 import { loadUserIntoApp } from "../../../../types/users/loadUserIntoApp";
 import { UserForLogin } from "../../../../types/users/userForLogin";
 import LoginStore from "../store/loginStore";

@@ -1,5 +1,5 @@
-import { loginStore } from "../store/loginStore";
+import LoginStore from "../store/loginStore";
 
-export function onUpdateField(name: string, value: string) {
+export function onUpdateField(name: string, value: string, loginStore: LoginStore) {
     loginStore.updateField(name, value);
 }

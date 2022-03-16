@@ -1,23 +1,26 @@
-import React, {Fragment, ReactElement} from "react";
-import {Outlet, RouteObject, useRoutes} from "react-router-dom";
-import {User} from "../../../types/users/user";
-import {Header} from "../Header/Header";
-import {Option} from "@hqoss/monads";
-import {Footer} from "../Footer/Footer";
-import localizedStrings from "../../../services/localization";
-import { getOrReloadStateLanguage } from "../../../services/getOrReloadLanguage";
-import { JsxElement } from "typescript";
+import { Fragment } from "react";
+import { Outlet, useParams } from "react-router-dom";
+import { Header } from "../Header/Header";
+import { Footer } from "../Footer/Footer";
+import GlobalStore from "../../../store/globalStore";
+import { observer } from "mobx-react-lite";
+import { useLocalization } from "../../../services/localization/reactLocalization";
 
-export function Layout({user, loading}: { user: Option<User>; loading: boolean;}) {
+export default observer(function Layout({
+    store
+}: {
+    store: GlobalStore
+}) {
+    const { language, localization } = useLocalization();
     return (
         <Fragment>
-            {!loading && (
+            {(!store.app.isLoading && (
                 <Fragment>
-                    <Header user={user}/>
-                    <Outlet/>
-                    <Footer/>
+                    <Header user={store.app.user} currentLanguage={language} onChangeLanguage={(language) => store.localization.onChangeLanguage(language)} />
+                    <Outlet />
+                    <Footer />
                 </Fragment>
-            ) || <p>{localizedStrings.viewer.loading}</p>}
+            )) || <p>{localization.viewer.loading}</p>}
         </Fragment>
     )
-}
+});

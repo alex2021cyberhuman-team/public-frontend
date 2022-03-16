@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Article } from "../../../types/articles/article";
-import { ArticleList } from "../ArticleList/ArticleList";
+import { ArticleList, ArticleViewModel } from "../ArticleList/ArticleList";
 import { ArticlesTabSet } from "../ArticlesTabSet/ArticlesTabSet";
 import { Pagination } from "../Pagination/Pagination";
 import { Option } from "@hqoss/monads";
@@ -24,8 +24,8 @@ export function ArticlesViewer({
     selectedTab: string;
     onPageChange: (index: number) => void;
     onTabChange: (tab: string) => void;
-    onFavoriteToggleAsync: (article: Article) => Promise<void>
-    articles: Option<Article[]>,
+    onFavoriteToggleAsync: (index: number, article: ArticleViewModel) => Promise<void>
+    articles: Option<ArticleViewModel[]>,
     articlesCount: number;
     currentPage: number;
     favoriteDisabled: boolean;

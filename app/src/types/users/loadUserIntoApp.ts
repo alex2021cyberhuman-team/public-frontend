@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getAccessTokenExpire } from "./tokenData";
-import { scheduleRefreshToken } from "../../services/conduit";
+import { scheduleRefreshToken } from "../../services/conduitApi/scheduleRefreshToken";
 import { globalStore } from '../../store/globalStore';
 import { User, LOCALSTORAGE_TOKEN } from './user';
 

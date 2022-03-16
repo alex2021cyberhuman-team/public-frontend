@@ -1,9 +1,10 @@
-import React from 'react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-import localizedStrings from "../../../services/localization";
+import {useLocalization} from "../../../services/localization/reactLocalization";
 import { TagList } from '../TagList/TagList';
 import { Article } from '../../../types/articles/article';
+import SmallAvatar from '../Avatar/SmallAvatar';
+import { assignLangHref, getLangHref } from '../NavItem/NavItem';
 
 export function ArticlePreview({
     article: {
@@ -25,31 +26,32 @@ export function ArticlePreview({
     onFavoriteToggle: () => void;
     favoriteDisabled: boolean;
 }) {
+    const {language, localization} = useLocalization();
     return (
         <div className='article-preview'>
             <div className='article-meta'>
                 <Link to={`/profile/${username}`} className='author'>
-                    <img src={image || undefined} />
+                    <SmallAvatar image={image} username={username} />
                 </Link>
                 <div className='info'>
-                    <Link to={`/profile/${username}`} className='author'>
+                    <a href={getLangHref(language, `/profile/${username}`)} className='author'>
                         {username}
-                    </Link>
+                    </a>
                     <span className='date'>{format(createdAt, 'PP')}</span>
                 </div>
                 <button
                     className={`btn btn-sm pull-xs-right ${favorited ? 'btn-primary' : 'btn-outline-primary'}`}
-                    aria-label={localizedStrings.article.toggleFavorited}
+                    aria-label={localization.article.toggleFavorited}
                     disabled={isSubmitting || favoriteDisabled}
                     onClick={() => onFavoriteToggle()}
                 >
                     <i className='ion-heart'></i> {favoritesCount}
                 </button>
             </div>
-            <a href={`/#/article/${slug}`} className='preview-link'>
+            <a href={getLangHref(language, `/article/${slug}`)} className='preview-link'>
                 <h1>{title}</h1>
                 <p>{description}</p>
-                <span>{localizedStrings.article.readMore}</span>
+                <span>{localization.article.readMore}</span>
                 <TagList tagList={tagList} />
             </a>
         </div>

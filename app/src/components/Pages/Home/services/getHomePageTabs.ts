@@ -1,10 +1,10 @@
-import localizedStrings from "../../../../services/localization";
+import { globalStore } from "../../../../store/globalStore";
 export const globalFeedTab = 'globalFeed';
 export const yourFeedTab = 'yourFeed';
 
 export function getHomePageTabs() {
     return new Map<string, string>([
-        [globalFeedTab, localizedStrings.home.feed.globalFeed],
-        [yourFeedTab, localizedStrings.home.feed.yourFeed]
+        [globalFeedTab, globalStore.localization.localization.home.feed.globalFeed],
+        [yourFeedTab, globalStore.localization.localization.home.feed.yourFeed]
     ]);
 }

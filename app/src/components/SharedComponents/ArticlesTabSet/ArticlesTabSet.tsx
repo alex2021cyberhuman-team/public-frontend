@@ -7,14 +7,14 @@ export function ArticlesTabSet({
     toggleClassName: string;
     selectedTab: string;
     tabsTranslation: Map<string, string>;
-    onTabChange?: (tab: string) => void;
+    onTabChange: (tab: string) => void;
 }) {
     return (
         <div className={toggleClassName}>
             <ul className='nav nav-pills outline-active'>
                 {tabs.map((tab) => (
                     <Tab key={tab} tab={tab} tabName={tabsTranslation.get(tab)} active={tab === selectedTab}
-                        onClick={() => onTabChange && onTabChange(tab)} />
+                        onClick={() => onTabChange(tab)} />
                 ))}
             </ul>
         </div>
