@@ -3,9 +3,10 @@ export interface GenericFormField {
     type: string;
     placeholder: string;
     rows?: number;
-    fieldType: 'input' | 'textarea' | 'list';
+    fieldType: 'input' | 'textarea' | 'list' | 'custom';
     listName?: string;
     lg: boolean;
+    customElement?: any | undefined;
 }
 
 export function buildGenericFormField(data: Partial<GenericFormField> & { name: string }): GenericFormField {

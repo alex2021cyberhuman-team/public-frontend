@@ -1,9 +1,15 @@
 import { makeAutoObservable } from "mobx";
-import { None, Option } from "@hqoss/monads";
+import { None, Option, Some } from "@hqoss/monads";
 import { User } from "../../types/users/user";
 import { Language } from "../../services/Language";
 
 export default class AppStore {
+    logout() {
+        this.user = None;
+    }
+    loadUser(user: User) {
+        this.user = Some(user);
+    }
     user: Option<User> = None;
     language: Language = '';
     isLoading = true;

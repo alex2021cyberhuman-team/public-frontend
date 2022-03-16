@@ -3,7 +3,9 @@ import axios from "axios";
 import {scheduleJob} from "node-schedule";
 import settings from "../config/settings";
 import { getOrReloadStateLanguage } from "./getOrReloadLanguage";
-import {loadUserIntoApp, logout, User, userDecoder} from "../types/users/user";
+import {User, userDecoder} from "../types/users/user";
+import { loadUserIntoApp } from "../types/users/loadUserIntoApp";
+import { logout } from "../types/users/logout";
 import {ArticlesFilters} from "../types/articles/articlesFilters";
 import {MultipleArticles, multipleArticlesDecoder} from "../types/articles/multipleArticles";
 import {objectToQueryString} from "../types/infrastructure/object";
@@ -17,6 +19,7 @@ import {Profile, profileDecoder} from "../types/users/profile";
 import {FeedFilters} from "../types/articles/feedFilters";
 import {Comment, commentDecoder, commentsDecoder} from "../types/comments/comment";
 import {ResErr} from "@hqoss/monads/dist/lib/result/result";
+import { UserForLogin } from '../types/users/userForLogin';
 
 axios.defaults.baseURL = settings.baseApiUrl;
 const VALIDATION_ERROR_STATUS = 422;
@@ -72,7 +75,7 @@ export async function getTags(): Promise<Tags> {
     return tags;
 }
 
-export async function login(email: string, password: string): Promise<Result<User, GenericErrors>> {
+export async function login({email, password}: UserForLogin): Promise<Result<User, GenericErrors>> {
     try {
         const {data} = await axios.post('users/login', {user: {email, password}});
         const user = userDecoder.verify(data.user);
