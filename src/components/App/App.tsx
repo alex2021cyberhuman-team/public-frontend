@@ -1,15 +1,22 @@
-import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import {Layout} from "../Layout/Layout";
-import {initializeApp} from "./App.slice";
-import {store} from "../../state/store";
+import { BrowserRouter, useRoutes } from 'react-router-dom';
+import { loadLanguage } from './App.slice';
+import { store } from '../../state/store';
+import { useStoreWithInitializer } from '../../state/storeHooks';
+import { load } from './services/load';
+import { buildRoutes } from './services/buildRoutes';
+import { Fragment } from 'react';
 
-export function App(){
-    store.dispatch(initializeApp);
-    return (
-        <BrowserRouter>
-            <Layout/>
-        </BrowserRouter>
-    )
+export function App() {
+  return (
+    <BrowserRouter>
+      <Routing />
+    </BrowserRouter>
+  );
 }
 
+export function Routing() {
+  const state = useStoreWithInitializer((state) => state, load);
+  const routes = buildRoutes(state);
+  let element = useRoutes(routes);
+  return <Fragment>{element}</Fragment>;
+}

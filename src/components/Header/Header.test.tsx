@@ -1,156 +1,150 @@
-﻿import {act, render, screen} from '@testing-library/react';
-import {store} from '../../state/store';
-import {changeLanguage, initializeApp, loadUser} from '../App/App.slice';
-import {Header} from './Header';
+﻿import { act, render, screen } from '@testing-library/react';
+import { store } from '../../state/store';
+import { changeLanguage, loadLanguage, loadUser } from '../App/App.slice';
+import { Header } from './Header';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
-it('Should render', () => {
-    render(<Header/>);
+beforeEach(() => {
+  render(
+    <MemoryRouter>
+      <Header />
+    </MemoryRouter>
+  );
 });
 
+it('Should render', () => {});
 
 describe('Header for guest', () => {
-    beforeAll(() => {
-        act(() => {
-            store.dispatch(changeLanguage('en'));
-            store.dispatch(initializeApp);
-        });
+  beforeAll(() => {
+    act(() => {
+      store.dispatch(changeLanguage('en'));
+      store.dispatch(loadLanguage);
     });
+  });
 
-    beforeEach(() => {
-        render(<Header/>);
-    });
+  it('Should render Sign in link', () => {
+    expectLinkByText('Sign in', 'login');
+  });
 
-    it('Should render Sign in link', () => {
-        expectLinkByText('Sign in', 'login');
-    });
+  it('Should render Sign up link', () => {
+    expectLinkByText('Sign up', 'register');
+  });
 
-    it('Should render Sign up link', () => {
-        expectLinkByText('Sign up', 'register');
-    });
+  it('Should not render New Article link', () => {
+    expectEmptyQueryByText('New Article');
+  });
 
-    it('Should not render New Article link', () => {
-        expectEmptyQueryByText('New Article');
-    });
-
-    it('Should not render Settings link', () => {
-        expectEmptyQueryByText('Settings');
-    });
+  it('Should not render Settings link', () => {
+    expectEmptyQueryByText('Settings');
+  });
 });
 
 describe('Header for russian speaking guest', () => {
-    beforeAll(() => {
-        act(() => {
-            store.dispatch(changeLanguage('ru'));
-            store.dispatch(initializeApp);
-        });
+  beforeAll(() => {
+    act(() => {
+      store.dispatch(changeLanguage('ru'));
+      store.dispatch(loadLanguage);
     });
+  });
 
-    beforeEach(() => {
-        render(<Header/>);
-    });
+  it('Should render Sign in link', () => {
+    expectLinkByText('Войти', 'login');
+  });
 
-    it('Should render Sign in link', () => {
-        expectLinkByText('Войти', 'login');
-    });
+  it('Should render Sign up link', () => {
+    expectLinkByText('Зарегистрироваться', 'register');
+  });
 
-    it('Should render Sign up link', () => {
-        expectLinkByText('Зарегистрироваться', 'register');
-    });
+  it('Should not render New Article link', () => {
+    expectEmptyQueryByText('Новая статья');
+  });
 
-    it('Should not render New Article link', () => {
-        expectEmptyQueryByText('Новая статья');
-    });
-
-    it('Should not render Settings link', () => {
-        expectEmptyQueryByText('Настройки');
-    });
+  it('Should not render Settings link', () => {
+    expectEmptyQueryByText('Настройки');
+  });
 });
 
 describe('Header for russian speaking user', () => {
-    beforeAll(() => {
-        act(() => {
-            store.dispatch(
-                loadUser({
-                    email: 'jake@jake.jake',
-                    token: 'jwt.token.here',
-                    username: 'jake',
-                    bio: 'I work at statefarm',
-                    image: null,
-                })
-            );
-        });
+  beforeAll(() => {
+    act(() => {
+      store.dispatch(
+        loadUser({
+          email: 'jake@jake.jake',
+          token: 'jwt.token.here',
+          username: 'jake',
+          bio: 'I work at statefarm',
+          image: null,
+        })
+      );
     });
+  });
 
-    beforeEach(() => render(<Header/>));
+  it('Should render New Article link', () => {
+    expectLinkByText('Новая статья', 'editor');
+  });
 
-    it('Should render New Article link', () => {
-        expectLinkByText('Новая статья', 'editor');
-    });
+  it('Should render Settings link', () => {
+    expectLinkByText('Настройки', 'settings');
+  });
 
-    it('Should render Settings link', () => {
-        expectLinkByText('Настройки', 'settings');
-    });
+  it('Should render user link', () => {
+    expectLinkByText('jake', 'profile/jake');
+  });
 
-    it('Should render user link', () => {
-        expectLinkByText('jake', 'profile/jake');
-    });
+  it('Should not render Sign in link', () => {
+    expectEmptyQueryByText('Войти');
+  });
 
-    it('Should not render Sign in link', () => {
-        expectEmptyQueryByText('Войти');
-    });
-
-    it('Should not render Sign up link', () => {
-        expectEmptyQueryByText('Зарегистрироваться');
-    });
+  it('Should not render Sign up link', () => {
+    expectEmptyQueryByText('Зарегистрироваться');
+  });
 });
 
 describe('Header for user', () => {
-    beforeAll(() => {
-        act(() => {
-            store.dispatch(changeLanguage('en'));
-            store.dispatch(
-                loadUser({
-                    email: 'jake@jake.jake',
-                    token: 'jwt.token.here',
-                    username: 'jake',
-                    bio: 'I work at statefarm',
-                    image: null,
-                })
-            );
-        });
+  beforeAll(() => {
+    act(() => {
+      store.dispatch(changeLanguage('en'));
+      store.dispatch(
+        loadUser({
+          email: 'jake@jake.jake',
+          token: 'jwt.token.here',
+          username: 'jake',
+          bio: 'I work at statefarm',
+          image: null,
+        })
+      );
     });
+  });
 
-    beforeEach(() => render(<Header/>));
+  it('Should render New Article link', () => {
+    expectLinkByText('New Article', 'editor');
+  });
 
-    it('Should render New Article link', () => {
-        expectLinkByText('New Article', 'editor');
-    });
+  it('Should render Settings link', () => {
+    expectLinkByText('Settings', 'settings');
+  });
 
-    it('Should render Settings link', () => {
-        expectLinkByText('Settings', 'settings');
-    });
+  it('Should render user link', () => {
+    expectLinkByText('jake', 'profile/jake');
+  });
 
-    it('Should render user link', () => {
-        expectLinkByText('jake', 'profile/jake');
-    });
+  it('Should not render Sign in link', () => {
+    expectEmptyQueryByText('Sign in');
+  });
 
-    it('Should not render Sign in link', () => {
-        expectEmptyQueryByText('Sign in');
-    });
-
-    it('Should not render Sign up link', () => {
-        expectEmptyQueryByText('Sign up');
-    });
+  it('Should not render Sign up link', () => {
+    expectEmptyQueryByText('Sign up');
+  });
 });
 
 function expectLinkByText(text: string, href: string) {
-    const link = screen.getByText(text);
-    expect(link).toBeInTheDocument();
-    expect(link.nodeName).toMatch('A');
-    expect(link.getAttribute('href')).toMatch('#/' + href);
+  const link = screen.getByText(text);
+  expect(link).toBeInTheDocument();
+  expect(link.nodeName).toMatch('A');
+  expect(link.getAttribute('href')).toMatch('/' + href);
 }
 
 function expectEmptyQueryByText(text: string) {
-    expect(screen.queryAllByText(text)).toHaveLength(0);
+  expect(screen.queryAllByText(text)).toHaveLength(0);
 }

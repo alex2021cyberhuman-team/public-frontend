@@ -1,4 +1,4 @@
-import {array, mapping, string} from 'decoders';
+import { array, mapping, string } from 'decoders';
 
 export type GenericErrors = Map<string, string[]>;
 
