@@ -11,7 +11,6 @@ import { onLoad } from './onLoad';
 export function ArticlePage() {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
-
   const {
     articlePage: { article, commentSection, metaSection },
     app: { user },

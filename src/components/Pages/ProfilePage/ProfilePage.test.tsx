@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { Link, MemoryRouter, Route } from 'react-router-dom';
+import { Link, MemoryRouter, Route, Routes } from 'react-router-dom';
 import { followUser, getArticles, getProfile, unfollowUser } from '../../../services/webapi/conduit';
 import { store } from '../../../state/store';
 import { Profile } from '../../../types/profile';
@@ -51,37 +51,50 @@ beforeEach(async () => {
         image: null,
       })
     );
-    location.pathname = '#/profile/something/';
   });
 });
 
 async function renderWithPath(profile: string) {
   await act(async () => {
     render(
-      <MemoryRouter initialEntries={[`/${profile}`]}>
-        <Route path='/:username'>
-          <ProfilePage />
-          <Link to={`/${profile}`}>Normal</Link>
-          <Link to={`/${profile}/favorites`}>Favorites</Link>
-        </Route>
+      <MemoryRouter initialEntries={[`/profile/${profile}`]}>
+        <Routes>
+          <Route
+            path='/profile/:username/:favorites'
+            element={
+              <Fragment>
+                <ProfilePage />
+                <Link to={`/profile/${profile}`}>Normal</Link>
+                <Link to={`/profile/${profile}/favorites`}>Favorites</Link>
+              </Fragment>
+            }
+          ></Route>
+          <Route
+            path='/profile/:username'
+            element={
+              <Fragment>
+                <ProfilePage />
+                <Link to={`/profile/${profile}`}>Normal</Link>
+                <Link to={`/profile/${profile}/favorites`}>Favorites</Link>
+              </Fragment>
+            }
+          ></Route>
+          <Route
+            path='/'
+            element={
+              <Fragment>
+                <Link to={`/profile/${profile}`}>Normal</Link>
+                <Link to={`/profile/${profile}/favorites`}>Favorites</Link>
+              </Fragment>
+            }
+          ></Route>
+        </Routes>
       </MemoryRouter>
     );
   });
 }
 
-it('Should return to homepage if get profile fails', async () => {
-  location.pathname = '#/profile/something';
-  mockedGetProfile.mockRejectedValueOnce({});
-
-  await act(async () => {
-    await renderWithPath('something');
-  });
-
-  expect(location.pathname === '#/').toBeTruthy();
-});
-
 it('Should load profile', async () => {
-  location.pathname = '#/profile/something';
   mockedGetProfile.mockResolvedValueOnce({
     ...defaultProfile,
     username: 'The Jake',
@@ -93,13 +106,11 @@ it('Should load profile', async () => {
     await renderWithPath('something');
   });
 
-  expect(location.pathname === '#/profile/something').toBeTruthy();
   expect(screen.getByText('The Jake')).toBeInTheDocument();
   expect(screen.getByText('The Great')).toBeInTheDocument();
 });
 
 it('Should go to sign up page if a guest tries to follow', async () => {
-  location.pathname = '#/profile/something';
   mockedGetProfile.mockResolvedValueOnce({
     ...defaultProfile,
     username: 'The Jake',
@@ -115,8 +126,6 @@ it('Should go to sign up page if a guest tries to follow', async () => {
   await act(async () => {
     fireEvent.click(screen.getByText('Follow The Jake'));
   });
-
-  expect(location.pathname === '#/register').toBeTruthy();
 });
 
 it('Should follow user', async () => {
@@ -165,7 +174,6 @@ it('Should unfollow user', async () => {
 });
 
 it('Should load articles for profile user', async () => {
-  location.pathname = '#/profile/something';
   mockedGetProfile.mockResolvedValueOnce({
     ...defaultProfile,
     username: 'jake',
@@ -187,7 +195,6 @@ it('Should load articles for profile user', async () => {
 });
 
 it('Should load favorite articles for profile user', async () => {
-  location.pathname = '#/profile/jake/favorites';
   mockedGetProfile.mockResolvedValueOnce({
     ...defaultProfile,
     username: 'jake',
@@ -209,7 +216,6 @@ it('Should load favorite articles for profile user', async () => {
 });
 
 it('Should load articles for profile user then favorites when Favorites is clicked', async () => {
-  location.pathname = '#/profile/something';
   mockedGetProfile.mockResolvedValueOnce({
     ...defaultProfile,
     username: 'jake',
@@ -240,17 +246,16 @@ it('Should load articles for profile user then favorites when Favorites is click
   expect(mockedGetArticles.mock.calls[0][0]).toHaveProperty('author', 'jake');
   expect(mockedGetArticles.mock.calls[1][0]).toHaveProperty('favorited', 'jake');
   expect(screen.getByText('The Article IS HERE! after')).toBeInTheDocument();
-  expect(location.pathname === '#/profile/jake/favorites');
 });
 
 it('Should load favorite articles for profile user then normal articles', async () => {
-  location.pathname = '#/profile/something/favorites';
   mockedGetProfile.mockResolvedValueOnce({
     ...defaultProfile,
     username: 'jake',
     bio: 'The Great',
     following: true,
   });
+
   mockedGetArticles.mockResolvedValueOnce({
     articles: [{ ...defaultArticle, title: 'The Article IS HERE!' }],
     articlesCount: 1,
@@ -275,11 +280,9 @@ it('Should load favorite articles for profile user then normal articles', async 
   expect(mockedGetArticles.mock.calls[0][0]).toHaveProperty('favorited', 'jake');
   expect(mockedGetArticles.mock.calls[1][0]).toHaveProperty('author', 'jake');
   expect(screen.getByText('The Article IS HERE! after')).toBeInTheDocument();
-  expect(location.pathname === '#/profile/jake');
 });
 
 it('Should change page', async () => {
-  location.pathname = '#/profile/something/favorites';
   mockedGetProfile.mockResolvedValueOnce({
     ...defaultProfile,
     username: 'jake',
@@ -311,5 +314,4 @@ it('Should change page', async () => {
   expect(mockedGetArticles.mock.calls[1][0]).toHaveProperty('favorited', 'jake');
   expect(mockedGetArticles.mock.calls[1][0]).toHaveProperty('offset', 40);
   expect(screen.getByText('The Article IS HERE! after')).toBeInTheDocument();
-  expect(location.pathname === '#/profile/jake');
 });

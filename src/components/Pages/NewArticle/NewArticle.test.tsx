@@ -5,6 +5,7 @@ import { createArticle } from '../../../services/webapi/conduit';
 import { store } from '../../../state/store';
 import { initializeEditor } from '../../ArticleEditor/ArticleEditor.slice';
 import { NewArticle } from './NewArticle';
+import { MemoryRouter } from 'react-router-dom';
 
 jest.mock('../../../services/webapi/conduit.ts');
 
@@ -13,7 +14,11 @@ const mockedCreateArticle = createArticle as jest.Mock<ReturnType<typeof createA
 beforeEach(() => {
   act(() => {
     store.dispatch(initializeEditor());
-    render(<NewArticle />);
+    render(
+      <MemoryRouter>
+        <NewArticle />
+      </MemoryRouter>
+    );
   });
 });
 

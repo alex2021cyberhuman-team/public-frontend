@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
   createComment,
   deleteArticle,
@@ -63,10 +63,11 @@ const defaultComment: Comment = {
 async function renderWithPath(slug: string) {
   await act(async () => {
     render(
-      <MemoryRouter initialEntries={[`/${slug}`]}>
-        <Route path='/:slug'>
-          <ArticlePage />
-        </Route>
+      <MemoryRouter initialEntries={[`/article/${slug}`]}>
+        <Routes>
+          <Route path='/article/:slug' element={<ArticlePage />} />
+          <Route path='/' element={<ArticlePage />} />
+        </Routes>
       </MemoryRouter>
     );
   });
@@ -96,7 +97,6 @@ describe('For non article owner User', () => {
   });
 
   it('Should follow user and rerender', async () => {
-    location.pathname = 'article/something';
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       author: { ...defaultArticle.author, username: 'the truth', following: false },
@@ -111,11 +111,9 @@ describe('For non article owner User', () => {
 
     expect(mockedFollowUser.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Unfollow the truth')[0]).toBeInTheDocument();
-    expect(location.pathname).toMatch('#/article/something');
   });
 
   it('Should unfollow user and rerender', async () => {
-    location.pathname = 'article/something';
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       author: { ...defaultArticle.author, username: 'the truth', following: true },
@@ -130,11 +128,9 @@ describe('For non article owner User', () => {
 
     expect(mockedUnfollowUser.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Follow the truth')[0]).toBeInTheDocument();
-    expect(location.pathname).toMatch('#/article/something');
   });
 
   it('Should favorite article', async () => {
-    location.pathname = 'article/something';
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       favorited: false,
@@ -149,11 +145,9 @@ describe('For non article owner User', () => {
 
     expect(mockedFavoriteArticle.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Unfavorite Article')[0]).toBeInTheDocument();
-    expect(location.pathname).toMatch('#/article/something');
   });
 
   it('Should unfavorite article', async () => {
-    location.pathname = 'article/something';
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       favorited: true,
@@ -168,7 +162,6 @@ describe('For non article owner User', () => {
 
     expect(mockedUnfavoriteArticle.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Favorite Article')[0]).toBeInTheDocument();
-    expect(location.pathname).toMatch('#/article/something');
   });
 
   it('Should create comment', async () => {
@@ -250,7 +243,6 @@ describe('For article owner User', () => {
   });
 
   it('Should delete article and redirect to homepage', async () => {
-    location.pathname = '/article/something';
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       author: { ...defaultArticle.author, username: 'jake3' },
@@ -263,7 +255,7 @@ describe('For article owner User', () => {
       fireEvent.click(screen.queryAllByText('Delete Article')[0]);
     });
 
-    expect(location.pathname).toMatch(`#/`);
+    expect(location.pathname).toMatch(`/`);
     expect(mockedDeleteArticle.mock.calls).toHaveLength(1);
   });
 });

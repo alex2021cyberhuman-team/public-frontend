@@ -5,14 +5,9 @@ import { initializeArticlePage, loadArticle, loadComments } from './ArticlePage.
 
 export async function onLoad(slug: string, navigate: NavigateFunction) {
   store.dispatch(initializeArticlePage());
+  const article = await getArticle(slug);
+  store.dispatch(loadArticle(article));
 
-  try {
-    const article = await getArticle(slug);
-    store.dispatch(loadArticle(article));
-
-    const comments = await getArticleComments(slug);
-    store.dispatch(loadComments(comments));
-  } catch {
-    navigate('/');
-  }
+  const comments = await getArticleComments(slug);
+  store.dispatch(loadComments(comments));
 }
