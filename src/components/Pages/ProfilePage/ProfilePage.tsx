@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useStore } from '../../../state/storeHooks';
 import { ArticlesViewer } from '../../ArticlesViewer/ArticlesViewer';
 import { UserInfo } from '../../UserInfo/UserInfo';

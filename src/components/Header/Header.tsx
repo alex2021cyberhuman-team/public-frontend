@@ -34,7 +34,6 @@ export function Header() {
 }
 
 function NavItem({ text, href, icon }: { text: string; href: string; icon?: string }) {
-  const { localization } = useLocalization();
   return (
     <li className='nav-item'>
       <NavLink to={href} className={({ isActive }) => (isActive ? 'active nav-link' : 'nav-link')}>
@@ -66,7 +65,7 @@ function UserLinks({ user: { username } }: { user: User }) {
 }
 
 function Languages() {
-  const { localization, language } = useLocalization();
+  const { language } = useLocalization();
   function setLanguage(code: string) {
     const language = store.getState().app.language;
     if (code !== language) {

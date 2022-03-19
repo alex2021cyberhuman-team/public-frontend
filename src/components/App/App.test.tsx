@@ -1,7 +1,6 @@
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
-import axios from 'axios';
-import { getArticles, getFeed, getTags, getUser } from '../../services/webapi/conduit';
+import { getArticles, getTags, getUser } from '../../services/webapi/conduit';
 import { store } from '../../state/store';
 import { App } from './App';
 import { loadLanguage } from './App.slice';
@@ -13,8 +12,6 @@ const mockedGetArticles = getArticles as jest.Mock<ReturnType<typeof getArticles
 //const mockedGetFeed = getFeed as jest.Mock<ReturnType<typeof getFeed>>;
 const mockedGetTags = getTags as jest.Mock<ReturnType<typeof getTags>>;
 const mockedGetUser = getUser as jest.Mock<ReturnType<typeof getUser>>;
-const testToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjk5OTk5OTk5OTl9.Vg30C57s3l90JNap_VgMhKZjfc-p7SoBXaSAy8c28HA';
 
 it('Should render home', async () => {
   act(() => {

@@ -1,12 +1,11 @@
 import React from 'react';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { favoriteArticle, getArticles, getFeed, getTags, unfavoriteArticle } from '../../../services/webapi/conduit';
 import { store } from '../../../state/store';
 import { loadLanguage, loadUser, logout } from '../../App/App.slice';
 import { Home } from './Home';
 import { changeTab } from './Home.slice';
-import { useLocalization } from '../../../services/localizations/localization';
 import tabs from '../../../services/tabs';
 
 jest.mock('../../../services/webapi/conduit.ts');

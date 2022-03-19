@@ -1,7 +1,6 @@
 import axios, { AxiosStatic } from 'axios';
 import {
   createArticle,
-  createComment,
   deleteArticle,
   deleteComment,
   favoriteArticle,

@@ -1,5 +1,4 @@
 import React from 'react';
-import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { Article } from '../../types/article';
 import { getLocalDate, useLocalization } from '../../services/localizations/localization';

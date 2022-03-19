@@ -25,9 +25,10 @@ axios.defaults.baseURL = settings.baseApiUrl;
 axios.interceptors.request.use((request) => {
   const state = store.getState();
   const languageCode = state.app.language;
-  if (!!request && !!languageCode) {
-    // @ts-ignore
+  if (request.headers) {
     request.headers['Accept-Language'] = languageCode;
+  } else {
+    request.headers = { 'Accept-Language': languageCode };
   }
   return request;
 });

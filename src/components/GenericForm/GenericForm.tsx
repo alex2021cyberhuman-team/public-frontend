@@ -30,45 +30,50 @@ export const GenericForm: FC<GenericFormProps> = ({
   <Fragment>
     <form onSubmit={onSubmit}>
       <fieldset>
-        {fields.map((field) => (
-          <Fragment key={field.name}>
-            {field.fieldType === 'input' ? (
-              <FormGroup
-                disabled={disabled}
-                type={field.type}
-                placeholder={field.placeholder}
-                value={formObject[field.name] || ''}
-                onChange={onUpdateField(field.name, onChange)}
-                lg={field.lg}
-              />
-            ) : field.fieldType === 'textarea' ? (
-              <TextAreaFormGroup
-                key={field.name}
-                disabled={disabled}
-                type={field.type}
-                placeholder={field.placeholder}
-                value={formObject[field.name] || ''}
-                rows={field.rows as number}
-                onChange={onUpdateField(field.name, onChange)}
-                lg={field.lg}
-              />
-            ) : (
-              <ListFormGroup
-                key={field.name}
-                disabled={disabled}
-                type={field.type}
-                placeholder={field.placeholder}
-                value={formObject[field.name] || ''}
-                onChange={onUpdateField(field.name, onChange)}
-                listValue={formObject[field.listName as string] as unknown as string[]}
-                onEnter={() => onAddItemToList && field.listName && onAddItemToList(field.listName)}
-                onRemoveItem={(index) => onRemoveListItem && field.listName && onRemoveListItem(field.listName, index)}
-                lg={field.lg}
-              />
-            )}
-            {errors.has(field.name) && <Errors errors={errors.get(field.name)!} />}
-          </Fragment>
-        ))}
+        {fields.map((field) => {
+          const fieldErrors = errors.get(field.name);
+          return (
+            <Fragment key={field.name}>
+              {field.fieldType === 'input' ? (
+                <FormGroup
+                  disabled={disabled}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  value={formObject[field.name] || ''}
+                  onChange={onUpdateField(field.name, onChange)}
+                  lg={field.lg}
+                />
+              ) : field.fieldType === 'textarea' ? (
+                <TextAreaFormGroup
+                  key={field.name}
+                  disabled={disabled}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  value={formObject[field.name] || ''}
+                  rows={field.rows as number}
+                  onChange={onUpdateField(field.name, onChange)}
+                  lg={field.lg}
+                />
+              ) : (
+                <ListFormGroup
+                  key={field.name}
+                  disabled={disabled}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  value={formObject[field.name] || ''}
+                  onChange={onUpdateField(field.name, onChange)}
+                  listValue={formObject[field.listName as string] as unknown as string[]}
+                  onEnter={() => onAddItemToList && field.listName && onAddItemToList(field.listName)}
+                  onRemoveItem={(index) =>
+                    onRemoveListItem && field.listName && onRemoveListItem(field.listName, index)
+                  }
+                  lg={field.lg}
+                />
+              )}
+              {fieldErrors && <Errors errors={fieldErrors} />}
+            </Fragment>
+          );
+        })}
         <button className='btn btn-lg btn-primary pull-xs-right'>{submitButtonText}</button>
       </fieldset>
     </form>

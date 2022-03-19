@@ -2,7 +2,7 @@ import { None, Option, Some } from '@hqoss/monads';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types/user';
 import { scheduleRefreshToken } from '../../services/webapi/conduit';
-import { always, apply, compose, defaultTo, evolve, F, ifElse } from 'ramda';
+import { evolve, F } from 'ramda';
 import { enStrings, Localization } from '../../services/localizations/enStrings';
 import { languagesDictionaries } from '../../services/localizations/localization';
 
@@ -25,11 +25,11 @@ const slice = createSlice({
   initialState,
   reducers: {
     loadLanguage: (state) => {
-      let language = localStorage.getItem('languageCode') || state.language;
-      const isLanguageDefined = languagesDictionaries.has(language);
-      if (isLanguageDefined) {
+      const language = localStorage.getItem('languageCode') || state.language;
+      const languagesDictionary = languagesDictionaries.get(language);
+      if (languagesDictionary) {
         state.language = language;
-        state.localization = languagesDictionaries.get(language)!;
+        state.localization = languagesDictionary;
         localStorage.setItem('languageCode', language);
       }
     },
@@ -39,13 +39,12 @@ const slice = createSlice({
       state.loading = false;
     },
     changeLanguage: (state, { payload: languageCode }: PayloadAction<string>) => {
-      const isLanguageDefined = languagesDictionaries.has(languageCode);
-      if (!isLanguageDefined) {
-        throw new Error(`${languageCode} is invalid language code`);
+      const languageDictionary = languagesDictionaries.get(languageCode);
+      if (languageDictionary) {
+        localStorage.setItem('languageCode', languageCode);
+        state.language = languageCode;
+        state.localization = languageDictionary;
       }
-      localStorage.setItem('languageCode', languageCode);
-      state.language = languageCode;
-      state.localization = languagesDictionaries.get(languageCode)!;
     },
     logout: (state) => {
       state.user = None;

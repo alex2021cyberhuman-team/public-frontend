@@ -1,11 +1,9 @@
 import React from 'react';
 import { Err, Ok } from '@hqoss/monads';
-import { fireEvent, getByPlaceholderText, render, screen } from '@testing-library/react';
-import axios from 'axios';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { login } from '../../../services/webapi/conduit';
 import { store } from '../../../state/store';
-import { logout } from '../../App/App.slice';
 import { Login } from './Login';
 import { startLoginIn, updateField } from './Login.slice';
 import { MemoryRouter } from 'react-router-dom';

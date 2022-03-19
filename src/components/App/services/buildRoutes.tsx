@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import { Layout } from '../../Layout/Layout';
 import { State } from '../../../state/store';
-import { Redirect } from '../../Redirect/Redirect';
 import { ProfilePage } from '../../Pages/ProfilePage/ProfilePage';
 import { Settings } from '../../Pages/Settings/Settings';
 import { ArticlePage } from '../../Pages/ArticlePage/ArticlePage';

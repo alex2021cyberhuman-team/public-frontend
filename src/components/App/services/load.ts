@@ -1,7 +1,7 @@
 import { getUser } from '../../../services/webapi/conduit';
 import { store } from '../../../state/store';
 import { getAccessTokenExpire, loadToken, loadUserIntoApp } from '../../../types/user';
-import { endLoad, loadLanguage, loadUser, logout } from '../App.slice';
+import { endLoad, loadLanguage, logout } from '../App.slice';
 
 export async function load() {
   const token = localStorage.getItem('token');

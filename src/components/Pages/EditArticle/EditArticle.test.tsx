@@ -1,5 +1,5 @@
 import React from 'react';
-import { Err, Ok } from '@hqoss/monads';
+import { Err } from '@hqoss/monads';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { getArticle, updateArticle } from '../../../services/webapi/conduit';

@@ -14,7 +14,7 @@ import {
 } from '../../../services/webapi/conduit';
 import { store } from '../../../state/store';
 import { Comment } from '../../../types/comment';
-import { loadLanguage, loadUser } from '../../App/App.slice';
+import { loadUser } from '../../App/App.slice';
 import { ArticlePage } from './ArticlePage';
 
 jest.mock('../../../services/webapi/conduit.ts');

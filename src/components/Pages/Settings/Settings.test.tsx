@@ -4,7 +4,7 @@ import { Settings } from './Settings';
 import { initializeSettings, startUpdate, updateErrors } from './Settings.slice';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { updateSettings } from '../../../services/webapi/conduit';
-import { Err, Ok } from '@hqoss/monads';
+import { Err } from '@hqoss/monads';
 import axios from 'axios';
 import { loadUser } from '../../App/App.slice';
 import { MemoryRouter } from 'react-router-dom';

@@ -9,7 +9,12 @@ export async function onLoad(username: string, favorites: boolean, navigate: Nav
   store.dispatch(initializeProfile());
   store.dispatch(startLoadingArticles());
   const profile = await getProfile(username);
-  store.dispatch(loadProfile(profile));
-  const articles = await getArticlesByType(username, favorites);
-  store.dispatch(loadArticles(articles));
+  try {
+    store.dispatch(loadProfile(profile));
+    const articles = await getArticlesByType(username, favorites);
+    store.dispatch(loadArticles(articles));
+  } catch (e) {
+    console.error(e);
+    navigate('/');
+  }
 }

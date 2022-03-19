@@ -1,9 +1,8 @@
 import React from 'react';
-import { render } from 'react-dom';
 import { formatString, useLocalization } from '../../services/localizations/localization';
 
 export function Footer() {
-  const { localization, language } = useLocalization();
+  const { localization } = useLocalization();
   return (
     <footer>
       <div className='container'>
