@@ -14,7 +14,6 @@ export async function onLoad(username: string, favorites: boolean, navigate: Nav
     const articles = await getArticlesByType(username, favorites);
     store.dispatch(loadArticles(articles));
   } catch (e) {
-    console.error(e);
     navigate('/');
   }
 }

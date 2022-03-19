@@ -1,5 +1,5 @@
 import { Err, Ok, Result } from '@hqoss/monads';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { array, Decoder, object, string } from 'decoders';
 import settings from '../../config/settings';
 import { store } from '../../state/store';
@@ -22,7 +22,9 @@ import { logout } from '../../components/App/App.slice';
 
 axios.defaults.baseURL = settings.baseApiUrl;
 
-axios.interceptors.request.use((request) => {
+axios.interceptors.request.use(setLanguageRequest);
+
+function setLanguageRequest(request: AxiosRequestConfig<unknown>) {
   const state = store.getState();
   const languageCode = state.app.language;
   if (request.headers) {
@@ -31,7 +33,7 @@ axios.interceptors.request.use((request) => {
     request.headers = { 'Accept-Language': languageCode };
   }
   return request;
-});
+}
 
 export function guard<T>(decoder: Decoder<T>) {
   return (value: T) => decoder.verify(value);

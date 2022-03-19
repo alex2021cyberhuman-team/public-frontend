@@ -24,6 +24,12 @@ const slice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+    reset: (state) => {
+      state.user = initialState.user;
+      state.loading = initialState.loading;
+      state.language = initialState.language;
+      state.localization = initialState.localization;
+    },
     loadLanguage: (state) => {
       const language = localStorage.getItem('languageCode') || state.language;
       const languagesDictionary = languagesDictionaries.get(language);
@@ -54,6 +60,6 @@ const slice = createSlice({
   },
 });
 
-export const { loadUser, logout, endLoad, loadLanguage, changeLanguage } = slice.actions;
+export const { loadUser, logout, endLoad, loadLanguage, changeLanguage, reset } = slice.actions;
 
 export default slice.reducer;

@@ -13,7 +13,6 @@ export async function onLoad(slug: string, navigate: NavigateFunction) {
     const comments = await getArticleComments(slug);
     store.dispatch(loadComments(comments));
   } catch (e) {
-    console.error(e);
     navigate('/');
   }
 }

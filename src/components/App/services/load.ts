@@ -8,7 +8,7 @@ export async function load() {
   const now = new Date();
   store.dispatch(loadLanguage());
   const expire = getAccessTokenExpire(token);
-  if (!store.getState().app.loading || !token || !expire || expire < now) {
+  if (!token || !expire || expire < now) {
     store.dispatch(endLoad());
     return;
   } else {
