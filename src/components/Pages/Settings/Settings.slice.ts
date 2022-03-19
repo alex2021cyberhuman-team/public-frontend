@@ -12,7 +12,7 @@ export interface SettingsState {
 
 const initialState: SettingsState = {
   user: { username: '', email: '', password: null, bio: null, image: null },
-  errors: {},
+  errors: new Map<string, string[]>(),
   updating: false,
 };
 

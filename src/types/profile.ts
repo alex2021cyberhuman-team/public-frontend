@@ -1,4 +1,4 @@
-import { Decoder, string, nullable, boolean, object, hardcoded, either } from 'decoders';
+import { boolean, Decoder, either, hardcoded, nullable, object, string } from 'decoders';
 import { PublicUser } from './user';
 
 export interface Profile extends PublicUser {

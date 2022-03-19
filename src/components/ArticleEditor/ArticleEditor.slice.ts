@@ -15,7 +15,7 @@ const initialState: EditorState = {
   article: { title: '', body: '', tagList: [], description: '' },
   tag: '',
   submitting: false,
-  errors: {},
+  errors: new Map<string, string[]>(),
   loading: true,
 };
 

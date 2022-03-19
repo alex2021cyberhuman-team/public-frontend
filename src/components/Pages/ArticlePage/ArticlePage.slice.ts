@@ -1,8 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {None, Option, Some} from '@hqoss/monads';
-import {Article} from '../../../types/article';
-import {Comment} from '../../../types/comment';
-import {Profile} from '../../../types/profile';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { None, Option, Some } from '@hqoss/monads';
+import { Article } from '../../../types/article';
+import { Comment } from '../../../types/comment';
+import { Profile } from '../../../types/profile';
+import * as R from 'ramda';
 
 export interface CommentSectionState {
   comments: Option<Comment[]>;
@@ -41,40 +42,35 @@ const slice = createSlice({
   initialState,
   reducers: {
     initializeArticlePage: () => initialState,
-    loadArticle: (state, {payload: article}: PayloadAction<Article>) => {
+    loadArticle: (state, { payload: article }: PayloadAction<Article>) => {
       state.article = Some(article);
       state.metaSection.submittingFavorite = false;
     },
-    loadComments: (state, {payload: comments}: PayloadAction<Comment[]>) => {
+    loadComments: (state, { payload: comments }: PayloadAction<Comment[]>) => {
       state.commentSection.comments = Some(comments);
       state.commentSection.commentBody = '';
       state.commentSection.submittingComment = false;
     },
-    updateAuthor: (state, {payload: author}: PayloadAction<Profile>) => {
-      state.article = state.article.map((article) => ({...article, author}));
+    updateAuthor: (state, { payload: author }: PayloadAction<Profile>) => {
+      state.article = state.article.map((article) => ({ ...article, author }));
       state.metaSection.submittingFollow = false;
     },
     startSubmittingFavorite: (state) => {
       state.metaSection.submittingFavorite = true;
     },
-    endSubmittingFavorite: (
-        state,
-        {payload: {favorited}}: PayloadAction<{ favorited: boolean }>
-    ) => {
+    endSubmittingFavorite: (state, { payload: { favorited } }: PayloadAction<{ favorited: boolean }>) => {
       state.article = state.article.map(
-          (val) => {
-            const newVal = {...val};
-            newVal.favorited = favorited;
-            newVal.favoritesCount += favorited ? +1 : -1;
-            return newVal;
-          }
+        R.evolve({
+          favorited: R.not,
+          favoritesCount: R.ifElse(R.always(favorited), R.dec, R.inc),
+        })
       );
       state.metaSection.submittingFavorite = false;
     },
     startSubmittingFollow: (state) => {
       state.metaSection.submittingFollow = true;
     },
-    updateCommentBody: (state, {payload: commentBody}: PayloadAction<string>) => {
+    updateCommentBody: (state, { payload: commentBody }: PayloadAction<string>) => {
       state.commentSection.commentBody = commentBody;
     },
     startSubmittingComment: (state) => {

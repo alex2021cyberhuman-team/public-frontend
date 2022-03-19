@@ -1,17 +1,19 @@
 import React from 'react';
-import {range} from 'ramda';
+import { range } from 'ramda';
+import { formatString, useLocalization } from '../../services/localizations/localization';
 
 export function Pagination({
-                             currentPage,
-                             count,
-                             itemsPerPage,
-                             onPageChange,
-                           }: {
+  currentPage,
+  count,
+  itemsPerPage,
+  onPageChange,
+}: {
   currentPage: number;
   count: number;
   itemsPerPage: number;
   onPageChange?: (index: number) => void;
 }) {
+  const { localization } = useLocalization();
   return (
     <nav>
       <ul className='pagination'>
@@ -22,7 +24,11 @@ export function Pagination({
               className={`page-item${currentPage !== index ? '' : ' active'}`}
               onClick={onPageChange && (() => onPageChange(index))}
             >
-              <a className='page-link' aria-label={`Go to page number ${index}`} href='#'>
+              <a
+                className='page-link'
+                aria-label={formatString(localization.pagination.goToPage, index).toString()}
+                href='#'
+              >
                 {index}
               </a>
             </li>

@@ -14,7 +14,7 @@ const initialState: RegisterState = {
     email: '',
     password: '',
   },
-  errors: {},
+  errors: new Map<string, string[]>(),
   signingUp: false,
 };
 

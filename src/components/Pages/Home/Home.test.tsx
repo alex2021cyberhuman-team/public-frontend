@@ -1,12 +1,14 @@
+import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { favoriteArticle, getArticles, getFeed, getTags, unfavoriteArticle } from '../../../services/conduit';
+import { favoriteArticle, getArticles, getFeed, getTags, unfavoriteArticle } from '../../../services/webapi/conduit';
 import { store } from '../../../state/store';
-import { initializeApp, loadUser } from '../../App/App.slice';
+import { loadLanguage, loadUser, logout } from '../../App/App.slice';
 import { Home } from './Home';
 import { changeTab } from './Home.slice';
+import tabs from '../../../services/tabs';
 
-jest.mock('../../../services/conduit');
+jest.mock('../../../services/webapi/conduit.ts');
 
 const mockedGetArticles = getArticles as jest.Mock<ReturnType<typeof getArticles>>;
 const mockedGetTags = getTags as jest.Mock<ReturnType<typeof getTags>>;
@@ -33,9 +35,10 @@ const defaultArticle = {
 };
 
 beforeEach(async () => {
+  const { localization } = store.getState().app;
   await act(async () => {
-    store.dispatch(initializeApp());
-    store.dispatch(changeTab('Global Feed'));
+    store.dispatch(loadLanguage());
+    store.dispatch(changeTab(localization.home.feed.globalFeed));
   });
 });
 
@@ -57,9 +60,7 @@ it('Should load articles', async () => {
   await act(async () => {
     await render(
       <MemoryRouter>
-        <MemoryRouter>
-          <Home />
-        </MemoryRouter>
+        <Home />
       </MemoryRouter>
     );
   });
@@ -67,7 +68,7 @@ it('Should load articles', async () => {
   screen.getByText('google');
   screen.getByText('Test 1');
   screen.getByText('Test 2');
-  expect(store.getState().home.selectedTab).toMatch('Global Feed');
+  expect(store.getState().home.selectedTab).toMatch(tabs.globalFeedTab);
 });
 
 it('Should show message if there are no articles', async () => {
@@ -80,9 +81,7 @@ it('Should show message if there are no articles', async () => {
   await act(async () => {
     await render(
       <MemoryRouter>
-        <MemoryRouter>
-          <Home />
-        </MemoryRouter>
+        <Home />
       </MemoryRouter>
     );
   });
@@ -121,33 +120,7 @@ it('Should load feed articles if user is logged in', async () => {
     );
   });
 
-  expect(store.getState().home.selectedTab).toMatch('Your Feed');
-});
-
-it('Should redirect to login on favorite if the user is not logged in', async () => {
-  mockedGetArticles.mockResolvedValueOnce({
-    articles: [defaultArticle],
-    articlesCount: 0,
-  });
-  mockedGetTags.mockResolvedValueOnce({ tags: [] });
-  mockedFavoriteArticle.mockResolvedValueOnce();
-
-  await act(async () => {
-    await render(
-      <MemoryRouter>
-        <Home />
-      </MemoryRouter>
-    );
-  });
-
-  await act(async () => {
-    fireEvent.click(screen.getByRole('button'));
-    expect(store.getState().articleViewer.articles.unwrap()[0].isSubmitting).toBe(false);
-  });
-
-  expect(mockedFavoriteArticle.mock.calls.length).toBe(0);
-  mockedFavoriteArticle.mockClear();
-  expect(location.hash).toMatch('#/login');
+  expect(store.getState().home.selectedTab).toMatch(tabs.yourFeedTab);
 });
 
 it('Should favorite article', async () => {
@@ -226,6 +199,7 @@ it('Should load another page', async () => {
   mockedGetTags.mockResolvedValueOnce({ tags: [] });
 
   await act(async () => {
+    store.dispatch(logout());
     await render(
       <MemoryRouter>
         <Home />
@@ -277,11 +251,12 @@ it('Should change tabs', async () => {
     articlesCount: 0,
   });
 
+  const localization = store.getState().app.localization;
   await act(async () => {
-    fireEvent.click(screen.getByText('Global Feed'));
+    fireEvent.click(screen.getByText(localization.home.feed.globalFeed));
   });
 
-  expect(store.getState().home.selectedTab).toMatch('Global Feed');
+  expect(store.getState().home.selectedTab).toMatch(tabs.globalFeedTab);
 
   mockedGetFeed.mockResolvedValueOnce({
     articles: [{ ...defaultArticle, favorited: true }],
@@ -289,16 +264,15 @@ it('Should change tabs', async () => {
   });
 
   await act(async () => {
-    fireEvent.click(screen.getByText('Your Feed'));
+    fireEvent.click(screen.getByText(localization.home.feed.yourFeed));
   });
 
-  expect(store.getState().home.selectedTab).toMatch('Your Feed');
+  expect(store.getState().home.selectedTab).toMatch(tabs.yourFeedTab);
 
   mockedGetArticles.mockResolvedValueOnce({
     articles: [{ ...defaultArticle, favorited: true }],
     articlesCount: 0,
   });
-
   await act(async () => {
     fireEvent.click(screen.getByText('the real tag'));
   });

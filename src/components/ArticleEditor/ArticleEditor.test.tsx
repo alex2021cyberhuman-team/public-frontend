@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { store } from '../../state/store';
 import { ArticleEditor } from './ArticleEditor';
 import { addTag, initializeEditor, updateField } from './ArticleEditor.slice';
+import React from 'react';
 
 beforeEach(() => {
   act(() => {
@@ -11,12 +12,13 @@ beforeEach(() => {
 });
 
 it('Should update article text fields', async () => {
+  const localization = store.getState().app.localization;
   await act(async () => {
-    fireEvent.change(screen.getByPlaceholderText('Article Title'), { target: { value: 'testTitle' } });
-    fireEvent.change(screen.getByPlaceholderText("What's this article about?"), {
+    fireEvent.change(screen.getByPlaceholderText(localization.articleEditor.title), { target: { value: 'testTitle' } });
+    fireEvent.change(screen.getByPlaceholderText(localization.articleEditor.description), {
       target: { value: 'testDescription' },
     });
-    fireEvent.change(screen.getByPlaceholderText('Write your article (in markdown)'), {
+    fireEvent.change(screen.getByPlaceholderText(localization.articleEditor.body), {
       target: { value: 'testBody' },
     });
     store.dispatch(updateField({ name: 'tagList', value: 'df' }));
@@ -28,8 +30,9 @@ it('Should update article text fields', async () => {
 });
 
 it('Should update article tag list field', async () => {
+  const localization = store.getState().app.localization;
   await act(async () => {
-    const enterTagsElement = screen.getByPlaceholderText('Enter Tags');
+    const enterTagsElement = screen.getByPlaceholderText(localization.articleEditor.tag);
     fireEvent.keyDown(enterTagsElement, { key: 'Enter' });
     fireEvent.keyDown(enterTagsElement, { key: 'A' });
 

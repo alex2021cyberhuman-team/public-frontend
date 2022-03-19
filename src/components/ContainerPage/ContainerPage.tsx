@@ -1,9 +1,9 @@
 import React from 'react';
 
-export function ContainerPage({children}: { children: JSX.Element | JSX.Element[] }) {
-    return (
-        <div className='container page'>
-            <div className='row'> {children} </div>
-        </div>
-    );
+export function ContainerPage({ children }: { children: JSX.Element | JSX.Element[] }) {
+  return (
+    <div className='container page'>
+      <div className='row'> {children} </div>
+    </div>
+  );
 }

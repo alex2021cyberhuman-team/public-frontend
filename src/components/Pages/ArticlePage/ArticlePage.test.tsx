@@ -1,5 +1,6 @@
-import {act, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter, Route} from 'react-router-dom';
+import React from 'react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
   createComment,
   deleteArticle,
@@ -10,14 +11,13 @@ import {
   getArticleComments,
   unfavoriteArticle,
   unfollowUser,
-} from '../../../services/conduit';
-import {store} from '../../../state/store';
-import {Comment} from '../../../types/comment';
-import {redirect} from '../../../types/location';
-import {initializeApp, loadUser} from '../../App/App.slice';
-import {ArticlePage} from './ArticlePage';
+} from '../../../services/webapi/conduit';
+import { store } from '../../../state/store';
+import { Comment } from '../../../types/comment';
+import { loadUser } from '../../App/App.slice';
+import { ArticlePage } from './ArticlePage';
 
-jest.mock('../../../services/conduit.ts');
+jest.mock('../../../services/webapi/conduit.ts');
 
 const mockedGetArticle = getArticle as jest.Mock<ReturnType<typeof getArticle>>;
 const mockedGetArticleComments = getArticleComments as jest.Mock<ReturnType<typeof getArticleComments>>;
@@ -41,7 +41,7 @@ const defaultArticle = {
   description: 'Test 1',
   favorited: false,
   favoritesCount: 0,
-  slug: 'test-pmy91z',
+  slug: 'sample-slug',
   tagList: [],
   title: 'Test',
   updatedAt: new Date(),
@@ -63,112 +63,15 @@ const defaultComment: Comment = {
 async function renderWithPath(slug: string) {
   await act(async () => {
     render(
-      <MemoryRouter initialEntries={[`/${slug}`]}>
-        <Route path='/:slug'>
-          <ArticlePage />
-        </Route>
+      <MemoryRouter initialEntries={[`/article/${slug}`]}>
+        <Routes>
+          <Route path='/article/:slug' element={<ArticlePage />} />
+          <Route path='/' element={<ArticlePage />} />
+        </Routes>
       </MemoryRouter>
     );
   });
 }
-
-describe('For guest', () => {
-  beforeEach(async () => {
-    await act(async () => {
-      store.dispatch(initializeApp());
-    });
-  });
-
-  it('Should redirect to home if it fails to load article', async () => {
-    redirect('article/something');
-    mockedGetArticle.mockRejectedValueOnce({});
-    mockedGetArticleComments.mockResolvedValueOnce([]);
-    await renderWithPath('sample-slug');
-
-    expect(location.hash === '#/').toBeTruthy();
-  });
-
-  it('Should render article', async () => {
-    mockedGetArticle.mockResolvedValueOnce({
-      ...defaultArticle,
-      title: 'The Title',
-      body: 'The Body',
-      tagList: ['tag1', 'tag2'],
-    });
-    mockedGetArticleComments.mockResolvedValueOnce([defaultComment]);
-    await renderWithPath('sample-slug');
-
-    expect(screen.getByText('The Title')).toBeInTheDocument();
-    expect(screen.getByText('The Body')).toBeInTheDocument();
-    expect(screen.getByText('tag1')).toBeInTheDocument();
-    expect(screen.getByText('tag2')).toBeInTheDocument();
-  });
-
-  it('Should show sign in option', async () => {
-    mockedGetArticle.mockResolvedValueOnce(defaultArticle);
-    mockedGetArticleComments.mockResolvedValueOnce([defaultComment]);
-    await renderWithPath('sample-slug');
-
-    expect(screen.getByText('Sign in')).toBeInTheDocument();
-  });
-
-  it('Should show comments', async () => {
-    mockedGetArticle.mockResolvedValueOnce(defaultArticle);
-    mockedGetArticleComments.mockResolvedValueOnce([
-      {
-        ...defaultComment,
-        id: '2',
-        body: 'First Comment',
-        author: {...defaultComment.author, username: 'James'}
-      },
-      {
-        ...defaultComment,
-        id: '3',
-        body: 'Second Comment',
-        author: {...defaultComment.author, username: 'jakelson'},
-      },
-    ]);
-    await renderWithPath('sample-slug');
-
-    expect(screen.getByText('First Comment')).toBeInTheDocument();
-    expect(screen.getByText('James')).toBeInTheDocument();
-    expect(screen.getByText('Second Comment')).toBeInTheDocument();
-    expect(screen.getByText('jakelson')).toBeInTheDocument();
-  });
-
-  it('Should redirect to register on follow', async () => {
-    redirect('article/something');
-    mockedGetArticle.mockResolvedValueOnce({
-      ...defaultArticle,
-      author: { ...defaultArticle.author, username: 'the truth' },
-    });
-    mockedGetArticleComments.mockResolvedValueOnce([]);
-    await renderWithPath('sample-slug');
-
-    await act(async () => {
-      fireEvent.click(screen.queryAllByText('Follow the truth')[0]);
-    });
-
-    expect(location.hash).toMatch('#/register');
-  });
-
-  it('Should redirect to register on favorite', async () => {
-    redirect('article/something');
-    mockedGetArticle.mockResolvedValueOnce({
-      ...defaultArticle,
-      favorited: false,
-      author: { ...defaultArticle.author, username: 'the truth' },
-    });
-    mockedGetArticleComments.mockResolvedValueOnce([]);
-    await renderWithPath('sample-slug');
-
-    await act(async () => {
-      fireEvent.click(screen.queryAllByText('Favorite Article')[0]);
-    });
-
-    expect(location.hash).toMatch('#/register');
-  });
-});
 
 describe('For non article owner User', () => {
   beforeEach(async () => {
@@ -194,7 +97,6 @@ describe('For non article owner User', () => {
   });
 
   it('Should follow user and rerender', async () => {
-    redirect('article/something');
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       author: { ...defaultArticle.author, username: 'the truth', following: false },
@@ -209,11 +111,9 @@ describe('For non article owner User', () => {
 
     expect(mockedFollowUser.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Unfollow the truth')[0]).toBeInTheDocument();
-    expect(location.hash).toMatch('#/article/something');
   });
 
   it('Should unfollow user and rerender', async () => {
-    redirect('article/something');
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       author: { ...defaultArticle.author, username: 'the truth', following: true },
@@ -228,11 +128,9 @@ describe('For non article owner User', () => {
 
     expect(mockedUnfollowUser.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Follow the truth')[0]).toBeInTheDocument();
-    expect(location.hash).toMatch('#/article/something');
   });
 
   it('Should favorite article', async () => {
-    redirect('article/something');
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       favorited: false,
@@ -247,11 +145,9 @@ describe('For non article owner User', () => {
 
     expect(mockedFavoriteArticle.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Unfavorite Article')[0]).toBeInTheDocument();
-    expect(location.hash).toMatch('#/article/something');
   });
 
   it('Should unfavorite article', async () => {
-    redirect('article/something');
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       favorited: true,
@@ -266,7 +162,6 @@ describe('For non article owner User', () => {
 
     expect(mockedUnfavoriteArticle.mock.calls).toHaveLength(1);
     expect(screen.queryAllByText('Favorite Article')[0]).toBeInTheDocument();
-    expect(location.hash).toMatch('#/article/something');
   });
 
   it('Should create comment', async () => {
@@ -347,24 +242,7 @@ describe('For article owner User', () => {
     });
   });
 
-  it('Should redirect to edit article page', async () => {
-    redirect('/article/something');
-    mockedGetArticle.mockResolvedValueOnce({
-      ...defaultArticle,
-      author: { ...defaultArticle.author, username: 'jake3' },
-    });
-    mockedGetArticleComments.mockResolvedValueOnce([defaultComment]);
-    await renderWithPath(defaultArticle.slug);
-
-    await act(async () => {
-      fireEvent.click(screen.queryAllByText('Edit Article')[0]);
-    });
-
-    expect(location.hash).toMatch(`#/editor/${defaultArticle.slug}`);
-  });
-
   it('Should delete article and redirect to homepage', async () => {
-    redirect('/article/something');
     mockedGetArticle.mockResolvedValueOnce({
       ...defaultArticle,
       author: { ...defaultArticle.author, username: 'jake3' },
@@ -377,7 +255,7 @@ describe('For article owner User', () => {
       fireEvent.click(screen.queryAllByText('Delete Article')[0]);
     });
 
-    expect(location.hash).toMatch(`#/`);
+    expect(location.pathname).toMatch(`/`);
     expect(mockedDeleteArticle.mock.calls).toHaveLength(1);
   });
 });

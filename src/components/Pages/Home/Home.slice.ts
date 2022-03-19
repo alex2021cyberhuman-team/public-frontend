@@ -1,5 +1,6 @@
 import { None, Option, Some } from '@hqoss/monads';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import tabs from '../../../services/tabs';
 
 export interface HomeState {
   tags: Option<string[]>;
@@ -8,7 +9,7 @@ export interface HomeState {
 
 const initialState: HomeState = {
   tags: None,
-  selectedTab: 'Global Feed',
+  selectedTab: tabs.globalFeedTab,
 };
 
 const slice = createSlice({

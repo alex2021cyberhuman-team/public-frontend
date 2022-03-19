@@ -5,9 +5,11 @@ import { buildGenericFormField } from '../../types/genericFormField';
 import { ContainerPage } from '../ContainerPage/ContainerPage';
 import { GenericForm } from '../GenericForm/GenericForm';
 import { addTag, EditorState, removeTag, updateField } from './ArticleEditor.slice';
+import { useLocalization } from '../../services/localizations/localization';
 
 export function ArticleEditor({ onSubmit }: { onSubmit: (ev: React.FormEvent) => void }) {
   const { article, submitting, tag, errors } = useStore(({ editor }) => editor);
+  const { localization } = useLocalization();
 
   return (
     <div className='editor-page'>
@@ -19,22 +21,29 @@ export function ArticleEditor({ onSubmit }: { onSubmit: (ev: React.FormEvent) =>
             errors={errors}
             onChange={onUpdateField}
             onSubmit={onSubmit}
-            submitButtonText='Publish Article'
+            submitButtonText={localization.articleEditor.submitButtonText}
             onAddItemToList={onAddTag}
             onRemoveListItem={onRemoveTag}
             fields={[
-              buildGenericFormField({ name: 'title', placeholder: 'Article Title' }),
-              buildGenericFormField({ name: 'description', placeholder: "What's this article about?", lg: false }),
+              buildGenericFormField({
+                name: 'title',
+                placeholder: localization.articleEditor.title,
+              }),
+              buildGenericFormField({
+                name: 'description',
+                placeholder: localization.articleEditor.description,
+                lg: false,
+              }),
               buildGenericFormField({
                 name: 'body',
-                placeholder: 'Write your article (in markdown)',
+                placeholder: localization.articleEditor.body,
                 fieldType: 'textarea',
                 rows: 8,
                 lg: false,
               }),
               buildGenericFormField({
                 name: 'tag',
-                placeholder: 'Enter Tags',
+                placeholder: localization.articleEditor.tag,
                 listName: 'tagList',
                 fieldType: 'list',
                 lg: false,

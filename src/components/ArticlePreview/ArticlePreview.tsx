@@ -1,17 +1,18 @@
 import React from 'react';
-import {format} from 'date-fns';
-import {Link} from 'react-router-dom';
-import {Article} from '../../types/article';
+import { Link } from 'react-router-dom';
+import { Article } from '../../types/article';
+import { getLocalDate, useLocalization } from '../../services/localizations/localization';
+import { SmallAvatar } from '../Avatars/SmallAvatar';
 
 export function ArticlePreview({
-                                 article: {
-                                   createdAt,
-                                   favorited,
-                                   favoritesCount,
-                                   slug,
-                                   title,
-                                   description,
-                                   tagList,
+  article: {
+    createdAt,
+    favorited,
+    favoritesCount,
+    slug,
+    title,
+    description,
+    tagList,
     author: { image, username },
   },
   isSubmitting,
@@ -21,31 +22,32 @@ export function ArticlePreview({
   isSubmitting: boolean;
   onFavoriteToggle?: () => void;
 }) {
+  const { localization, language } = useLocalization();
   return (
     <div className='article-preview'>
       <div className='article-meta'>
         <Link to={`/profile/${username}`} className='author'>
-          <img src={image || undefined} />
+          <SmallAvatar image={image} />
         </Link>
         <div className='info'>
           <Link to={`/profile/${username}`} className='author'>
             {username}
           </Link>
-          <span className='date'>{format(createdAt, 'PP')}</span>
+          <span className='date'>{getLocalDate(createdAt, language)}</span>
         </div>
         <button
           className={`btn btn-sm pull-xs-right ${favorited ? 'btn-primary' : 'btn-outline-primary'}`}
-          aria-label='Toggle Favorite'
+          aria-label={localization.article.toggleFavorited}
           disabled={isSubmitting}
           onClick={onFavoriteToggle}
         >
           <i className='ion-heart'></i> {favoritesCount}
         </button>
       </div>
-      <a href={`/#/article/${slug}`} className='preview-link'>
+      <a href={`/article/${slug}`} className='preview-link'>
         <h1>{title}</h1>
         <p>{description}</p>
-        <span>Read more...</span>
+        <span>{localization.article.readMore}</span>
         <TagList tagList={tagList} />
       </a>
     </div>

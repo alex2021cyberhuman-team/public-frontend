@@ -1,13 +1,15 @@
 import React from 'react';
-import {useStore} from '../../state/storeHooks';
-import {Profile} from '../../types/profile';
+import { useStore } from '../../state/storeHooks';
+import { Profile } from '../../types/profile';
+import { useLocalization } from '../../services/localizations/localization';
+import { SmallAvatar } from '../Avatars/SmallAvatar';
 
 export function UserInfo({
-                           user: {image, username, bio, following},
-                           disabled,
-                           onFollowToggle,
-                           onEditSettings,
-                         }: {
+  user: { image, username, bio, following },
+  disabled,
+  onFollowToggle,
+  onEditSettings,
+}: {
   user: Profile;
   disabled: boolean;
   onFollowToggle?: () => void;
@@ -21,7 +23,7 @@ export function UserInfo({
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-10 offset-md-1'>
-            <img src={image || undefined} className='user-img' />
+            <SmallAvatar image={image} className='user-img' />
             <h4>{username}</h4>
             <p>{bio}</p>
 
@@ -53,19 +55,21 @@ function ToggleFollowButton({
   disabled: boolean;
   onClick?: () => void;
 }) {
+  const { localization } = useLocalization();
   return (
     <button className='btn btn-sm btn-outline-secondary action-btn' onClick={onClick} disabled={disabled}>
       <i className='ion-plus-round'></i>
       &nbsp;
-      {following ? ' Unfollow' : ' Follow'} {username}
+      {following ? localization.userInfo.unfollow : localization.userInfo.follow} {username}
     </button>
   );
 }
 
 function EditProfileButton({ disabled, onClick }: { disabled: boolean; onClick?: () => void }) {
+  const { localization } = useLocalization();
   return (
     <button className='btn btn-sm btn-outline-secondary action-btn' onClick={onClick} disabled={disabled}>
-      <i className='ion-gear-a'></i>&nbsp; Edit Profile Settings
+      <i className='ion-gear-a'></i>&nbsp; {localization.userInfo.editProfile}
     </button>
   );
 }

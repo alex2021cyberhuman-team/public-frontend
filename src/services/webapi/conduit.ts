@@ -1,7 +1,8 @@
-import {Err, Ok, Result} from '@hqoss/monads';
-import axios from 'axios';
-import {array, guard, object, string} from 'decoders';
-import settings from '../config/settings';
+import { Err, Ok, Result } from '@hqoss/monads';
+import axios, { AxiosRequestConfig } from 'axios';
+import { array, Decoder, object, string } from 'decoders';
+import settings from '../../config/settings';
+import { store } from '../../state/store';
 import {
   Article,
   articleDecoder,
@@ -10,14 +11,47 @@ import {
   FeedFilters,
   MultipleArticles,
   multipleArticlesDecoder,
-} from '../types/article';
-import {Comment, commentDecoder} from '../types/comment';
-import {GenericErrors, genericErrorsDecoder} from '../types/error';
-import {objectToQueryString} from '../types/object';
-import {Profile, profileDecoder} from '../types/profile';
-import {User, userDecoder, UserForRegistration, UserSettings} from '../types/user';
+} from '../../types/article';
+import { scheduleJob } from 'node-schedule';
+import { Comment, commentDecoder } from '../../types/comment';
+import { GenericErrors, genericErrorsDecoder } from '../../types/error';
+import { objectToQueryString } from '../../types/object';
+import { Profile, profileDecoder } from '../../types/profile';
+import { loadUserIntoApp, User, userDecoder, UserForRegistration, UserSettings } from '../../types/user';
+import { logout } from '../../components/App/App.slice';
 
 axios.defaults.baseURL = settings.baseApiUrl;
+
+axios.interceptors.request.use(setLanguageRequest);
+
+function setLanguageRequest(request: AxiosRequestConfig<unknown>) {
+  const state = store.getState();
+  const languageCode = state.app.language;
+  if (request.headers) {
+    request.headers['Accept-Language'] = languageCode;
+  } else {
+    request.headers = { 'Accept-Language': languageCode };
+  }
+  return request;
+}
+
+export function guard<T>(decoder: Decoder<T>) {
+  return (value: T) => decoder.verify(value);
+}
+
+export function scheduleRefreshToken(user: User) {
+  const now = new Date();
+  if (user.accessTokenExpireTime && user.accessTokenExpireTime >= now) {
+    const refreshTime = new Date(+user.accessTokenExpireTime - 10 * 1000);
+    scheduleJob(refreshTime, refreshToken);
+  }
+}
+
+export function refreshToken() {
+  getUser()
+    .then((user) => loadUserIntoApp(user))
+    .catch(() => logout());
+}
 
 export async function getArticles(filters: ArticlesFilters = {}): Promise<MultipleArticles> {
   const finalFilters: ArticlesFilters = {
@@ -38,7 +72,7 @@ export async function login(email: string, password: string): Promise<Result<Use
 
     return Ok(guard(object({ user: userDecoder }))(data).user);
   } catch ({ response: { data } }) {
-    return Err(guard(object({ errors: genericErrorsDecoder }))(data).errors);
+    return Err(guard(object({ errors: genericErrorsDecoder }))(data as { errors: GenericErrors }).errors);
   }
 }
 
@@ -57,21 +91,20 @@ export async function unfavoriteArticle(slug: string): Promise<void> {
 
 export async function updateSettings(user: UserSettings): Promise<Result<User, GenericErrors>> {
   try {
-    const {data} = await axios.put('user', {user});
+    const { data } = await axios.put('user', { user });
 
     return Ok(guard(object({ user: userDecoder }))(data).user);
   } catch ({ data }) {
-    return Err(guard(object({ errors: genericErrorsDecoder }))(data).errors);
+    return Err(guard(object({ errors: genericErrorsDecoder }))(data as { errors: GenericErrors }).errors);
   }
 }
 
 export async function signUp(user: UserForRegistration): Promise<Result<User, GenericErrors>> {
   try {
-    const { data } = await axios.post('users', { user });
-
+    const data = (await axios.post('users', { user })).data;
     return Ok(guard(object({ user: userDecoder }))(data).user);
   } catch ({ response: { data } }) {
-    return Err(guard(object({ errors: genericErrorsDecoder }))(data).errors);
+    return Err(guard(object({ errors: genericErrorsDecoder }))(data as { errors: GenericErrors }).errors);
   }
 }
 
@@ -81,7 +114,7 @@ export async function createArticle(article: ArticleForEditor): Promise<Result<A
 
     return Ok(guard(object({ article: articleDecoder }))(data).article);
   } catch ({ response: { data } }) {
-    return Err(guard(object({ errors: genericErrorsDecoder }))(data).errors);
+    return Err(guard(object({ errors: genericErrorsDecoder }))(data as { errors: GenericErrors }).errors);
   }
 }
 
@@ -96,7 +129,7 @@ export async function updateArticle(slug: string, article: ArticleForEditor): Pr
 
     return Ok(guard(object({ article: articleDecoder }))(data).article);
   } catch ({ response: { data } }) {
-    return Err(guard(object({ errors: genericErrorsDecoder }))(data).errors);
+    return Err(guard(object({ errors: genericErrorsDecoder }))(data as { errors: GenericErrors }).errors);
   }
 }
 

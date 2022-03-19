@@ -15,7 +15,7 @@ const initialState: LoginState = {
     email: '',
     password: '',
   },
-  errors: {},
+  errors: new Map<string, string[]>(),
   loginIn: false,
 };
 

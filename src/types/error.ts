@@ -1,5 +1,5 @@
-import { array, dict, string } from 'decoders';
+import { array, mapping, string } from 'decoders';
 
-export type GenericErrors = Record<string, string[]>;
+export type GenericErrors = Map<string, string[]>;
 
-export const genericErrorsDecoder = dict(array(string));
+export const genericErrorsDecoder = mapping(array(string));
