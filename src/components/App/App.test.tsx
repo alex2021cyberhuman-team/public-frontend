@@ -3,8 +3,7 @@ import { act, cleanup, render, screen } from '@testing-library/react';
 import { getArticles, getFeed, getTags, getUser } from '../../services/webapi/conduit';
 import { store } from '../../state/store';
 import { App } from './App';
-import { loadLanguage, reset } from './App.slice';
-import { load } from './services/load';
+import { reset } from './App.slice';
 
 jest.mock('../../services/webapi/conduit.ts');
 jest.mock('axios');
