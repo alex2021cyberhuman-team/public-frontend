@@ -19,7 +19,6 @@ This application is built following (as much as practicable) functional programm
 
 * Immutable Data
 * No classes
-* No let or var
 * Use of monads (Option, Result)
 * No side effects
 
