@@ -7,6 +7,7 @@ import { CommentSection } from './CommentSection';
 import { ArticleMeta } from './ArticleMeta';
 import { ArticlePageBanner } from './ArticlePageBanner';
 import { onLoad } from './onLoad';
+import { ArticleBody } from './ArticleBody';
 
 export function ArticlePage() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export function ArticlePage() {
 
         <div className='container page'>
           <div className='row article-content'>
-            <div className='col-md-12'>{article.body}</div>
+            <ArticleBody body={article.body} />
             <TagList tagList={article.tagList} />
           </div>
 

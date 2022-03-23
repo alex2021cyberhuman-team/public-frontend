@@ -1,9 +1,12 @@
+import { FC } from 'react';
+
 export interface GenericFormField {
   name: string;
   type: string;
   placeholder: string;
   rows?: number;
-  fieldType: 'input' | 'textarea' | 'list';
+  fieldType: 'input' | 'textarea' | 'list' | 'custom';
+  customElement?: FC<FormFieldProps>;
   listName?: string;
   lg: boolean;
 }
@@ -16,4 +19,10 @@ export function buildGenericFormField(data: Partial<GenericFormField> & { name: 
     lg: true,
     ...data,
   };
+}
+
+export interface FormFieldProps {
+  disabled: boolean;
+  value: string;
+  onChange: (value?: string | undefined) => void;
 }

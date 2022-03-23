@@ -1,5 +1,7 @@
 import React, { FC, Fragment } from 'react';
-import { FormGroup, ListFormGroup, TextAreaFormGroup } from '../FormGroup/FormGroup';
+import { FormGroup } from '../FormGroup/FormGroup';
+import { ListFormGroup } from '../FormGroup/ListFormGroup';
+import { TextAreaFormGroup } from '../FormGroup/TextAreaFormGroup';
 import { GenericFormField } from '../../types/genericFormField';
 import { GenericErrors } from '../../types/error';
 import { Errors } from '../Errors/Errors';
@@ -54,7 +56,7 @@ export const GenericForm: FC<GenericFormProps> = ({
                   onChange={onUpdateField(field.name, onChange)}
                   lg={field.lg}
                 />
-              ) : (
+              ) : field.fieldType === 'list' ? (
                 <ListFormGroup
                   key={field.name}
                   disabled={disabled}
@@ -69,7 +71,14 @@ export const GenericForm: FC<GenericFormProps> = ({
                   }
                   lg={field.lg}
                 />
-              )}
+              ) : field.customElement ? (
+                <field.customElement
+                  {...field}
+                  disabled={disabled}
+                  onChange={(value) => onChange(field.name, value || '')}
+                  value={formObject[field.name] || ''}
+                />
+              ) : undefined}
               {fieldErrors && <Errors errors={fieldErrors} />}
             </Fragment>
           );

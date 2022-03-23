@@ -6,6 +6,7 @@ import { ContainerPage } from '../ContainerPage/ContainerPage';
 import { GenericForm } from '../GenericForm/GenericForm';
 import { addTag, EditorState, removeTag, updateField } from './ArticleEditor.slice';
 import { useLocalization } from '../../services/localizations/localization';
+import { MarkdownFormField } from '../FormGroup/MarkdownFormField';
 
 export function ArticleEditor({ onSubmit }: { onSubmit: (ev: React.FormEvent) => void }) {
   const { article, submitting, tag, errors } = useStore(({ editor }) => editor);
@@ -36,10 +37,9 @@ export function ArticleEditor({ onSubmit }: { onSubmit: (ev: React.FormEvent) =>
               }),
               buildGenericFormField({
                 name: 'body',
+                fieldType: 'custom',
                 placeholder: localization.articleEditor.body,
-                fieldType: 'textarea',
-                rows: 8,
-                lg: false,
+                customElement: MarkdownFormField,
               }),
               buildGenericFormField({
                 name: 'tag',

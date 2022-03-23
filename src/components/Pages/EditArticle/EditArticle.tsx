@@ -44,7 +44,8 @@ function onSubmit(slug: string, navigate: NavigateFunction): (ev: React.FormEven
     ev.preventDefault();
 
     store.dispatch(startSubmitting());
-    const result = await updateArticle(slug, store.getState().editor.article);
+    const article = store.getState().editor.article;
+    const result = await updateArticle(slug, article);
 
     result.match({
       err: (errors) => store.dispatch(updateErrors(errors)),

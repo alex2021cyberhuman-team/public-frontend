@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { ListFormGroup } from './FormGroup';
+import { ListFormGroup } from './ListFormGroup';
 
 it('Input should be large', () => {
   render(
