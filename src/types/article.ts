@@ -1,7 +1,8 @@
-import { array, boolean, Decoder, iso8601, number, object, string } from 'decoders';
+import { array, boolean, Decoder, iso8601, number, object, string, uuid } from 'decoders';
 import { Profile, profileDecoder } from './profile';
 
 export interface Article {
+  id: string;
   slug: string;
   title: string;
   description: string;
@@ -15,6 +16,7 @@ export interface Article {
 }
 
 export const articleDecoder: Decoder<Article> = object({
+  id: uuid,
   slug: string,
   title: string,
   description: string,

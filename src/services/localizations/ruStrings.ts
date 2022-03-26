@@ -16,6 +16,7 @@ export const ruStrings: Localization = {
     description: 'О чем будет статья?',
     body: 'Напишите вашу статью (markdown будет поддерживаться)',
     tag: "Введите название тега и нажмите 'Enter'",
+    imageRemove: 'Убрать',
   },
   home: {
     banner: {

@@ -34,6 +34,7 @@ export const GenericForm: FC<GenericFormProps> = ({
       <fieldset>
         {fields.map((field) => {
           const fieldErrors = errors.get(field.name);
+          const component = field.customElement?.();
           return (
             <Fragment key={field.name}>
               {field.fieldType === 'input' ? (
@@ -72,12 +73,7 @@ export const GenericForm: FC<GenericFormProps> = ({
                   lg={field.lg}
                 />
               ) : field.customElement ? (
-                <field.customElement
-                  {...field}
-                  disabled={disabled}
-                  onChange={(value) => onChange(field.name, value || '')}
-                  value={formObject[field.name] || ''}
-                />
+                <Fragment key={field.name}>{component}</Fragment>
               ) : undefined}
               {fieldErrors && <Errors errors={fieldErrors} />}
             </Fragment>

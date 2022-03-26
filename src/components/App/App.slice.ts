@@ -1,7 +1,7 @@
 import { None, Option, Some } from '@hqoss/monads';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types/user';
-import { scheduleRefreshToken } from '../../services/webapi/conduit';
+import { scheduleRefreshToken } from '../../services/webapi/scheduleRefreshToken';
 import { evolve, F } from 'ramda';
 import { enStrings, Localization } from '../../services/localizations/enStrings';
 import { languagesDictionaries } from '../../services/localizations/localization';
