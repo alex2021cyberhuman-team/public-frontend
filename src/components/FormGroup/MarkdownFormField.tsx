@@ -10,8 +10,6 @@ export interface ArticleImage {
   articleId?: string | undefined;
   url: string;
   mediaType: string;
-  width: number;
-  height: number;
 }
 
 export function MarkdownFormFieldWithImages({
