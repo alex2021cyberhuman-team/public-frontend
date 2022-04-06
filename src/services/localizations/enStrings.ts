@@ -14,6 +14,7 @@ export const enStrings = {
     description: "What's this article about",
     body: 'Write your article (markdown will be supported)',
     tag: 'Enter tag and press enter',
+    imageRemove: 'Remove image',
   },
   home: {
     banner: {

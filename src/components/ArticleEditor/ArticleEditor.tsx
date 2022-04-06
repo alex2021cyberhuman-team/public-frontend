@@ -4,12 +4,41 @@ import { useStore } from '../../state/storeHooks';
 import { buildGenericFormField } from '../../types/genericFormField';
 import { ContainerPage } from '../ContainerPage/ContainerPage';
 import { GenericForm } from '../GenericForm/GenericForm';
-import { addTag, EditorState, removeTag, updateField } from './ArticleEditor.slice';
+import {
+  addTag,
+  afterRemoveImage,
+  afterUploadImage,
+  beforeRemoveImage,
+  beforeUploadImage,
+  EditorState,
+  removeTag,
+  updateField,
+} from './ArticleEditor.slice';
 import { useLocalization } from '../../services/localizations/localization';
+import { ArticleImage, MarkdownFormFieldWithImages } from '../FormGroup/MarkdownFormField';
 
-export function ArticleEditor({ onSubmit }: { onSubmit: (ev: React.FormEvent) => void }) {
-  const { article, submitting, tag, errors } = useStore(({ editor }) => editor);
+export function ArticleEditor({
+  onSubmit,
+  onUploadImageAsync,
+  onRemoveImageAsync,
+}: {
+  onSubmit: (ev: React.FormEvent) => void;
+  slug?: string | undefined;
+  onUploadImageAsync: (image: File) => Promise<ArticleImage>;
+  onRemoveImageAsync: (id: string) => Promise<void>;
+}) {
+  const { article, submitting, tag, errors, articleImages } = useStore(({ editor }) => editor);
   const { localization } = useLocalization();
+
+  function onRemoveImage(id: string) {
+    store.dispatch(beforeRemoveImage());
+    onRemoveImageAsync(id).then(() => store.dispatch(afterRemoveImage(id)));
+  }
+
+  function onUploadImage(image: File) {
+    store.dispatch(beforeUploadImage());
+    onUploadImageAsync(image).then((img) => store.dispatch(afterUploadImage(img)));
+  }
 
   return (
     <div className='editor-page'>
@@ -36,10 +65,17 @@ export function ArticleEditor({ onSubmit }: { onSubmit: (ev: React.FormEvent) =>
               }),
               buildGenericFormField({
                 name: 'body',
-                placeholder: localization.articleEditor.body,
-                fieldType: 'textarea',
-                rows: 8,
-                lg: false,
+                customElement: () => (
+                  <MarkdownFormFieldWithImages
+                    articleImages={articleImages}
+                    onUpload={onUploadImage}
+                    onRemove={onRemoveImage}
+                    placeholder={localization.articleEditor.body}
+                    disabled={submitting}
+                    value={article.body}
+                    onChange={(v) => onUpdateField('body', v || '')}
+                  />
+                ),
               }),
               buildGenericFormField({
                 name: 'tag',

@@ -15,7 +15,7 @@ export function OwnerArticleMetaActions({
   const navigate = useNavigate();
   return (
     <Fragment>
-      <button className='btn btn-outline-secondary btn-sm' onClick={() => navigate(`editor/${slug}`)}>
+      <button className='btn btn-outline-secondary btn-sm' onClick={() => navigate(`/editor/${slug}`)}>
         <i className='ion-plus-round'></i>
         &nbsp; {localization.article.edit}
       </button>

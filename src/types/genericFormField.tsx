@@ -3,7 +3,8 @@ export interface GenericFormField {
   type: string;
   placeholder: string;
   rows?: number;
-  fieldType: 'input' | 'textarea' | 'list';
+  fieldType: 'input' | 'textarea' | 'list' | 'custom';
+  customElement?: () => React.ReactElement;
   listName?: string;
   lg: boolean;
 }

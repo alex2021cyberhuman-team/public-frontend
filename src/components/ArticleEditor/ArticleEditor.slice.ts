@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ArticleForEditor } from '../../types/article';
 import * as R from 'ramda';
 import { GenericErrors } from '../../types/error';
+import { ArticleImage } from '../FormGroup/MarkdownFormField';
 
 export interface EditorState {
   article: ArticleForEditor;
@@ -9,6 +10,7 @@ export interface EditorState {
   submitting: boolean;
   errors: GenericErrors;
   loading: boolean;
+  articleImages: ArticleImage[];
 }
 
 const initialState: EditorState = {
@@ -17,6 +19,7 @@ const initialState: EditorState = {
   submitting: false,
   errors: new Map<string, string[]>(),
   loading: true,
+  articleImages: [],
 };
 
 const slice = createSlice({
@@ -53,14 +56,45 @@ const slice = createSlice({
     removeTag: (state, { payload: index }: PayloadAction<number>) => {
       state.article.tagList = R.remove(index, 1, state.article.tagList);
     },
+    afterUploadImage: (state, { payload }: PayloadAction<ArticleImage>) => {
+      state.submitting = false;
+      state.articleImages = [payload].concat(state.articleImages);
+      const bodyWithImage = state.article.body + '\n' + `![](${payload.url})` + '\n';
+      state.article = { ...state.article, body: bodyWithImage };
+    },
+    beforeUploadImage: (state) => {
+      state.submitting = true;
+    },
+    afterRemoveImage: (state, { payload: id }: PayloadAction<string>) => {
+      state.submitting = false;
+      state.articleImages = state.articleImages.filter((v) => v.id !== id);
+    },
+    beforeRemoveImage: (state) => {
+      state.submitting = true;
+    },
     loadArticle: (state, { payload: article }: PayloadAction<ArticleForEditor>) => {
       state.article = article;
-      state.loading = false;
+      state.submitting = false;
+    },
+    loadImages: (state, { payload: images }: PayloadAction<ArticleImage[]>) => {
+      state.articleImages = images;
     },
   },
 });
 
-export const { initializeEditor, updateField, startSubmitting, addTag, removeTag, updateErrors, loadArticle } =
-  slice.actions;
+export const {
+  initializeEditor,
+  updateField,
+  startSubmitting,
+  addTag,
+  removeTag,
+  updateErrors,
+  loadArticle,
+  loadImages,
+  afterUploadImage,
+  beforeUploadImage,
+  afterRemoveImage,
+  beforeRemoveImage,
+} = slice.actions;
 
 export default slice.reducer;
